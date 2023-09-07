@@ -15,21 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import  LoginView
-from django.contrib.auth.views import LogoutView
-from templates_generales.views import IndexView
 
 
-app_name = 'templates_generales'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('works/', include('mantenedor_works.urls') ), 
     path("cuenta/", include('cuenta.urls')),
-    path('', login_required(IndexView.as_view()), name="index_home"),
-    path('accounts/login/', LoginView.as_view(template_name='templates_generales/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('novedades/', include('novedades.urls')), 
+    path('', include('templates_generales.urls') ),
+   
 ]
 
 

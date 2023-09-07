@@ -1,0 +1,66 @@
+{% extends 'templates_generales/template_main.html' %}
+{% load static %}
+{% block content %}
+ 
+{% block script_limpiar %} <script src="{% static 'js/limpiar.js' %}"></script>{% endblock script_limpiar %}
+{% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
+
+
+<div class="container">
+  <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
+  <form action="buscar_usuarios" method="GET" class="mt-4">
+    <div class="row">
+      <div class="col-md-3">
+        <label for="person_number">Número de Persona:</label>
+        <input type="text" id="person_number" name="person_number" class="form-control" value="{{ formulario_data.person_number }}">
+      </div>
+      <div class="col-md-3">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ formulario_data.nombre }}"> 
+      </div>
+      <div class="col-md-3">
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" id="apellidos" name="apellidos" class="form-control" value="{{ formulario_data.apellidos }}">
+      </div>
+      <div class="col-md-3">
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" id="ciudad" name="ciudad" class="form-control" value="{{ formulario_data.ciudad }}">
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label for="base_datos">Consultar sistema: </label>
+        <select class="form-control form-control-sm" id="base_datos" name="base_datos">
+            <option value="PeopleSoft">PeopleSoft</option>
+            <option value="HCM">HCM</option>
+        </select>
+    </div>
+    <script>
+       
+        const select = document.getElementById("base_datos");     
+        const selectedValue = localStorage.getItem("selectedValue");
+        if (selectedValue) {
+            select.value = selectedValue;
+        }
+        
+        select.addEventListener("change", function () {
+            localStorage.setItem("selectedValue", this.value);
+        });
+    </script>
+{% block css %} <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">{% endblock css %}
+    <div class="d-flex align-items-center mt-3">
+      <button id= "buscar" type="submit" class="btn btn-primary">Buscar</button>
+      <a id= "limpiar" href="buscar_usuarios" class="btn btn-danger" onclick="limpiarFormulario()">Limpiar</a> <!-- Enlace para limpiar la búsqueda -->
+    </div>
+    </div>
+  </form>
+</div>
+{% if error_message %}
+<div class="alert alert-danger mt-3">
+  {{ error_message }}
+</div>
+{% endif %}
+{% block grilla_usuarios %}
+{% endblock grilla_usuarios %}
+{% endblock content %}
+

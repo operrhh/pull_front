@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'modelos',
     'templates_generales',
     'mantenedor_works',
+    'novedades',
 ]
 
 MIDDLEWARE = [
@@ -109,15 +110,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-cl'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Santiago'
 
 USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = reverse_lazy('index_home') 
+LOGIN_REDIRECT_URL = reverse_lazy('index_home')
+LOGOUT_REDIRECT_URL = reverse_lazy('login') 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 

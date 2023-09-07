@@ -1,0 +1,19 @@
+
+#buscar {
+  background-color: green;
+  margin-right: 10px;
+}
+
+
+#limpiar {
+  margin-left: 10px;
+}
+
+#detalle {
+  background-color: green;
+}
+
+#regresar_formulario {
+  text-align: right;
+  background-color: green;
+}
