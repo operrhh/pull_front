@@ -1,0 +1,31 @@
+{% extends 'mantenedor_works/detalles_usuario.html' %}
+{% load static %}
+
+{% block hcm_block %}
+<div class="hcm">
+    <h3>Datos de HCM</h3>
+    {% if usuarios_hcm %}
+      <div class="mt-4">
+          <!-- Aquí puedes mostrar los datos de HCM de la misma manera que lo hiciste para PeopleSoft -->
+          <p><strong>Empleador:</strong> {{ usuarios_hcm.0.workRelationships.0.LegalEmployerName }}</p>
+      </div>
+    {% else %}
+      <p>No se encontraron datos en HCM para este usuario.</p>
+    {% endif %}
+</div>
+{% endblock hcm_block %}
+
+{% block peoplesoft_block %}
+<div class="peoplesoft">
+    <h3>Datos de PeopleSoft</h3>
+    {% if usuarios_peoplesoft %}
+      <div class="mt-4">
+          <!-- Aquí puedes mostrar los datos de PeopleSoft -->
+          <!-- Ejemplo: -->
+          <p><strong>Empleador:</strong> {{ usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName }}</p>
+      </div>
+    {% else %}
+      <p>No se encontraron datos en PeopleSoft para este usuario.</p>
+    {% endif %}
+</div>
+{% endblock peoplesoft_block %}

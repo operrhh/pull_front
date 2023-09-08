@@ -1,0 +1,214 @@
+[
+    {
+        "PersonNumber": "19684785-5",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Luciano", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "lucian.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "lpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+
+    {
+        "PersonNumber": "32654785-5",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pinillo", "FirstName": "Luciano", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "lucian.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "lpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+ {
+        "PersonNumber": "15884785-5",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Albino", "FirstName": "Lucian", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "lucian.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "lpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "15984785-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Carlos", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "15885786-7",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Roberto", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "roberto.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "rpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "15984785-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Carlos", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "15986885-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Nurio", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "69584785-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Josue", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "14784785-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Carla", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    },
+    {
+        "PersonNumber": "14782585-6",
+        "DateOfBirth": "1997-08-18",
+        "names": [{"LastName": "Pino", "FirstName": "Juanito", "MiddleNames": "Aguilar", "LegislationCode": "CL"}],
+        "emails": [
+            {"EmailType": "H1", "EmailAddress": "carlos.pino.a@gmail.com", "PrimaryFlag": ""},
+            {"EmailType": "W1", "EmailAddress": "cpinoa@ccu.cl", "PrimaryFlag": ""}
+        ],
+        "phones": [
+            {"PhoneType": "H1", "PhoneNumber": "+56 9 12345678", "PrimaryFlag": ""},
+            {"PhoneType": "W1", "PhoneNumber": "+56 2 135654", "PrimaryFlag": ""}
+        ],
+        "addresses": [{"TownOrCity": "Santiago", "AddressLine1": "Av. El Golf 150", "Country": "CL", "PostalCode": " ", "AddressType": "HOME", "PrimaryFlag": ""}],
+        "workRelationships": [{
+            "LegalEmployerName": "CCU",
+            "WorkerType": "E",
+            "PrimaryFlag": "",
+            "StartDate": "2023-02-02",
+            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+        }]
+    }
+
+]

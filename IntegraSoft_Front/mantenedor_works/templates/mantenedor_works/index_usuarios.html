@@ -1,10 +1,9 @@
 {% extends 'templates_generales/template_main.html' %}
 {% load static %}
 {% block content %}
- 
+
 {% block script_limpiar %} <script src="{% static 'js/limpiar.js' %}"></script>{% endblock script_limpiar %}
 {% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
-
 
 <div class="container">
   <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
@@ -12,19 +11,19 @@
     <div class="row">
       <div class="col-md-3">
         <label for="person_number">Número de Persona:</label>
-        <input type="text" id="person_number" name="person_number" class="form-control" value="{{ formulario_data.person_number }}">
+        <input type="text" id="Person_Number" name="Person_Number" class="form-control" value="{{ formulario_data.Person_Number }}">
       </div>
       <div class="col-md-3">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" class="form-control" value="{{ formulario_data.nombre }}"> 
       </div>
       <div class="col-md-3">
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" id="apellidos" name="apellidos" class="form-control" value="{{ formulario_data.apellidos }}">
+        <label for="BusinessUnitName">Unidad de Negocio:</label>
+        <input type="text" id="BusinessUnitName" name="BusinessUnitName" class="form-control" value="{{ formulario_data.BusinessUnitName }}">
       </div>
       <div class="col-md-3">
-        <label for="ciudad">Ciudad:</label>
-        <input type="text" id="ciudad" name="ciudad" class="form-control" value="{{ formulario_data.ciudad }}">
+        <label for="LegislationCode">Código de Legislación:</label>
+        <input type="text" id="LegislationCode" name="LegislationCode" class="form-control" value="{{ formulario_data.LegislationCode }}">
       </div>
     </div>
     <div class="row mt-3">
@@ -35,8 +34,17 @@
             <option value="HCM">HCM</option>
         </select>
     </div>
+        {% if error_message %}
+        <style>
+            {% if 'Person_Number' in campos_vacios %} #Person_Number { border-color: red; } {% endif %}
+            {% if 'nombre' in campos_vacios %} #nombre { border-color: red; } {% endif %}
+            {% if 'BusinessUnitName' in campos_vacios %} #BusinessUnitName { border-color: red; } {% endif %}
+            {% if 'LegislationCode' in campos_vacios %} #LegislationCode { border-color: red; } {% endif %}
+        </style>
+      {% endif %}
+  
+
     <script>
-       
         const select = document.getElementById("base_datos");     
         const selectedValue = localStorage.getItem("selectedValue");
         if (selectedValue) {
@@ -59,8 +67,25 @@
 <div class="alert alert-danger mt-3">
   {{ error_message }}
 </div>
+<div class="pagination">
+  <span class="step-links">
+      {% if registros_pagina.has_previous %}
+          <a href="?page=1&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">primero</a>
+          <a href="?page={{ registros_pagina.previous_page_number }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">anterior</a>
+      {% endif %}
+
+      <span class="current">
+          Página {{ registros_pagina.number }} de {{ registros_pagina.paginator.num_pages }}.
+      </span>
+
+      {% if registros_pagina.has_next %}
+         <a href="?page={{ registros_pagina.next_page_number }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">siguiente</a>
+         <a href="?page={{ registros_pagina.paginator.num_pages }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">último</a>
+      {% endif %}
+  </span>
+</div>
+
 {% endif %}
 {% block grilla_usuarios %}
 {% endblock grilla_usuarios %}
 {% endblock content %}
-

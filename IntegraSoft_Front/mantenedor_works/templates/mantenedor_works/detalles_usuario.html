@@ -15,64 +15,29 @@
   <div class="align-right">
     <!-- Botón para regresar a la página de búsqueda -->
     <a id="regresar_formulario" href="{% url 'buscar_usuarios_mantenedor_works' %}" class="btn btn-primary">Regresar a la búsqueda</a>
-
-
-<!--Colocamos aqui lo que va debajo del botón para mantener ordenada la estructura -->
   </div>
+
   <h1 class="text-center mt-4">Detalles del Usuario</h1>
   <div class="mt-4">
       {% if usuario %}
-    <h2>{{ usuario.nombre }} {{ usuario.apellidos }}</h2>
-    <p><strong>Número de Persona:</strong> {{ usuario.person_number }}</p>
-    <p><strong>Ciudad:</strong> {{ usuario.ciudad }}</p>
+    <h2>{{ usuario.names.0.FirstName }} {{ usuario.names.0.LastName }}</h2>
+    <p><strong>Número de Persona:</strong> {{ usuario.PersonNumber }}</p>
+    <p><strong>Ciudad:</strong> {{ usuario.addresses.0.TownOrCity }}</p>
     {% else %}
-    <p>No se encontraron datos en HCM para este usuario.</p>
+    <p>No se encontraron datos para este usuario.</p>
   {% endif %}
-    <!-- Agrega más detalles aquí, como correo, ubicación, etc. -->
+
+    <!-- Aquí puedes agregar más lógica para detectar diferencias entre los sistemas -->
 
     <div class="row">
+      <!-- Sección para los datos de HCM -->
       <div class="col-md-6">
-        <!-- Sección para los datos de HCM -->
-        <div class="hcm">
-          <h3>Datos de HCM</h3>
-          <!-- Sección para los datos de HCM -->
-          {% block hcm %}
-          <div class="hcm">
-            
-            {% if usuarios_hcm %}
-              <div class="mt-4">
-                <p><strong>Edad (HCM):</strong> {{ usuarios_hcm.0.edad }}</p>
-                <p><strong>Renta (HCM):</strong> {{ usuarios_hcm.0.renta }}</p>
-                <p><strong>Unidad de negocio (HCM):</strong> {{ usuarios_hcm.0.unidad_negocio }}</p>
-              </div>
-            {% else %}
-              <p>No se encontraron datos en HCM para este usuario.</p>
-            {% endif %}
-          </div>
-          {% endblock hcm %}
-        </div>
+        {% block hcm_block %} {% endblock hcm_block %}
       </div>
 
+      <!-- Sección para los datos de PeopleSoft -->
       <div class="col-md-6">
-        <!-- Sección para los datos de PeopleSoft -->
-        <div class="peoplesoft">
-          <h3>Datos de PeopleSoft</h3>
-          <!-- Agrega aquí los detalles de PeopleSoft -->
-          {% block peoplesoft %}
-          <div class="peoplesoft">
-    
-            {% if usuarios_peoplesoft %}
-              <div class="mt-4">
-                <p><strong>Edad (PeopleSoft):</strong> {{ usuarios_peoplesoft.0.edad }}</p>
-                <p><strong>Renta (PeopleSoft):</strong> {{ usuarios_peoplesoft.0.renta }}</p>
-                <p><strong>Unidad de negocio (PeopleSoft):</strong> {{ usuarios_peoplesoft.0.unidad_negocio }}</p>
-              </div>
-            {% else %}
-              <p>No se encontraron datos en PeopleSoft para este usuario.</p>
-            {% endif %}
-          </div>
-          {% endblock peoplesoft %}
-        </div>
+        {% block peoplesoft_block %} {% endblock peoplesoft_block %}
       </div>
     </div>
   </div>

@@ -20,14 +20,14 @@
       <tbody>
         {% for resultado in registros_pagina %}
         <tr>
-          <td>{{ resultado.person_number }}</td>
-          <td>{{ resultado.nombre }}</td>
-          <td>{{ resultado.apellidos }}</td>
-          <td>{{ resultado.ciudad }}</td>
+          <td>{{ resultado.PersonNumber }}</td>
+          <td>{{ resultado.names.0.FirstName }}</td>
+          <td>{{ resultado.names.0.LastName }}</td>
+          <td>{{ resultado.addresses.0.TownOrCity }}</td>
           <td>
             {% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
             {% block script_regreso %} <script src="{% static 'js/regreso.js'%}"></script>{% endblock script_regreso %} 
-            <a id="detalle" href="{% url 'detalles_usuario_mantenedor_works' base_datos=formulario_data.base_datos user_id=resultado.person_number|stringformat:'s' %}" class="btn btn-primary">Ver Detalle</a>
+            <a id="detalle" href="{% url 'detalles_usuario_mantenedor_works' base_datos=formulario_data.base_datos user_id=resultado.PersonNumber %}" class="btn btn-primary">Ver Detalle</a>
           </td>
         </tr>
         {% endfor %}
@@ -35,26 +35,23 @@
     </table>
     <div class="pagination">
       <span class="step-links">
-        {% if registros_pagina.has_previous %}
-          <a href="?page=1{% if formulario_data.person_number %}&person_number={{ formulario_data.person_number }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&laquo;&laquo;</a>
-          <a href="?page={{ registros_pagina.previous_page_number }}{% if formulario_data.person_number %}&person_number={{ formulario_data.person_number }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">anterior</a>
-        {% endif %}
-      
-        <span class="current-page">{{ registros_pagina.number }}</span>
-      
-        {% if registros_pagina.has_next %}
-          <a href="?page={{ registros_pagina.next_page_number }}{% if formulario_data.person_number %}&person_number={{ formulario_data.person_number }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">siguiente</a>
-          <a href="?page={{ registros_pagina.paginator.num_pages }}{% if formulario_data.person_number %}&person_number={{ formulario_data.person_number }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&raquo;&raquo;</a>
-        {% endif %}
+          {% if registros_pagina.has_previous %}
+              <a href="?page=1{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&laquo;&laquo;</a>
+              <a href="?page={{ registros_pagina.previous_page_number }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">anterior</a>
+          {% endif %}
+        
+          <span class="current-page">{{ registros_pagina.number }}</span>
+        
+          {% if registros_pagina.has_next %}
+              <a href="?page={{ registros_pagina.next_page_number }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">siguiente</a>
+              <a href="?page={{ registros_pagina.paginator.num_pages }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&raquo;&raquo;</a>
+          {% endif %}
       </span>
-    </div>
+  </div>
+  
   </div>
 {% else %}
   <p>No se encontraron resultados.</p>
 {% endif %}
 
 {% endblock grilla_usuarios %}
-
-
-
-
