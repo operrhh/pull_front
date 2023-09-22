@@ -1,3 +1,4 @@
+//funciona
 document.addEventListener("DOMContentLoaded", function () {
     const retrocederButton = document.getElementById("regresar_formulario");
     

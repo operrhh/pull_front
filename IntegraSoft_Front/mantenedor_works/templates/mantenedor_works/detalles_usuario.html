@@ -28,18 +28,25 @@
   {% endif %}
 
     <!-- Aquí puedes agregar más lógica para detectar diferencias entre los sistemas -->
+  {%block error %}     
+
+  {% endblock error %}
+  
 
     <div class="row">
       <!-- Sección para los datos de HCM -->
-      <div class="col-md-6">
+      <div class="col-md-6 {% if formulario_data.base_datos == 'HCM' %}background-hcm{% endif %}">
         {% block hcm_block %} {% endblock hcm_block %}
       </div>
 
       <!-- Sección para los datos de PeopleSoft -->
-      <div class="col-md-6">
+      <div class="col-md-6 {% if formulario_data.base_datos == 'PeopleSoft' %}background-peoplesoft{% endif %}">
         {% block peoplesoft_block %} {% endblock peoplesoft_block %}
       </div>
     </div>
   </div>
 </div>
 {% endblock content %}
+
+
+

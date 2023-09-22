@@ -1,4 +1,4 @@
-
+// funciona
 const select = document.getElementById("base_datos");     
 const selectedValue = localStorage.getItem("selectedValue");
 if (selectedValue) {

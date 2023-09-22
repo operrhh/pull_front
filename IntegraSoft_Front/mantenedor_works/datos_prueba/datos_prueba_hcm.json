@@ -17,7 +17,7 @@
             "WorkerType": "E",
             "PrimaryFlag": "",
             "StartDate": "2023-02-02",
-            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+            "assignments": [{"AssignmentName": "ABOGADO", "ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "02 - El Gato SA", "DepartmentName": "07 - La Barra S.A."}]
         }]
     },
     {
@@ -38,7 +38,7 @@
             "WorkerType": "E",
             "PrimaryFlag": "",
             "StartDate": "2023-02-02",
-            "assignments": [{"ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU"}]
+            "assignments": [{"AssignmentName": "ABOGADO", "ActionCode": "HIRE", "BusinessUnitId": 300000002013051, "BusinessUnitName": "00 - Compañía Cervecerías Unidas S.A. BU", "DepartmentName": "07 - La Barra S.A."}]
         }]
     }
 ]

@@ -1,32 +1,45 @@
-  // formulario.js
+function cargarOpcionesPorBase(baseDatosSeleccionada) {
+    fetch(`obtener_opciones_por_base?base_datos=${baseDatosSeleccionada}`)
+        .then(response => response.json())
+        .then(data => {
+            const dropdownUnidades = document.getElementById('BusinessUnitName');
+            const dropdownDepartamentos = document.getElementById('DepartmentName');
+            
+            // Guardar los valores seleccionados previamente
+            const unidadSeleccionada = dropdownUnidades.value;
+            const departamentoSeleccionado = dropdownDepartamentos.value;
+            
+            // Limpiar dropdowns
+            dropdownUnidades.innerHTML = '<option value="">Seleccione una opción</option>';
+            dropdownDepartamentos.innerHTML = '<option value="">Seleccione una opción</option>';
+            
+            // Llenar dropdowns con los datos recibidos
+            data.opciones_unidad_negocio.forEach(unidad => {
+                const option = document.createElement('option');
+                option.value = unidad;
+                option.textContent = unidad;
+                dropdownUnidades.appendChild(option);
+            });
+            
+            data.opciones_departamento.forEach(departamento => {
+                const option = document.createElement('option');
+                option.value = departamento;
+                option.textContent = departamento;
+                dropdownDepartamentos.appendChild(option);
+            });
 
-// Obtener los elementos de entrada de texto y el select
-const personNumberInput = document.getElementById("person_number");
-const nombreInput = document.getElementById("nombre");
-const apellidosInput = document.getElementById("apellidos");
-const ciudadInput = document.getElementById("ciudad");
-const baseDatosSelect = document.getElementById("base_datos");
+            // Restaurar los valores seleccionados previamente
+            dropdownUnidades.value = unidadSeleccionada;
+            dropdownDepartamentos.value = departamentoSeleccionado;
+        });
+}
 
-// Recuperar los valores de los campos desde localStorage
-const storedPersonNumber = localStorage.getItem("person_number");
-const storedNombre = localStorage.getItem("nombre");
-const storedApellidos = localStorage.getItem("apellidos");
-const storedCiudad = localStorage.getItem("ciudad");
-const storedBaseDatos = localStorage.getItem("base_datos");
+const dropdownBaseDatos = document.getElementById('base_datos');
+dropdownBaseDatos.addEventListener('change', () => {
+    const baseDatosSeleccionada = dropdownBaseDatos.value;
+    cargarOpcionesPorBase(baseDatosSeleccionada);
+});
 
-// Establecer los valores de los campos con los valores almacenados
-if (storedPersonNumber) {
-  personNumberInput.value = storedPersonNumber;
-}
-if (storedNombre) {
-  nombreInput.value = storedNombre;
-}
-if (storedApellidos) {
-  apellidosInput.value = storedApellidos;
-}
-if (storedCiudad) {
-  ciudadInput.value = storedCiudad;
-}
-if (storedBaseDatos) {
-  baseDatosSelect.value = storedBaseDatos;
-}
+// Llamada inicial para cargar las opciones de los dropdowns
+const baseDatosSeleccionada = dropdownBaseDatos.value;
+cargarOpcionesPorBase(baseDatosSeleccionada);
