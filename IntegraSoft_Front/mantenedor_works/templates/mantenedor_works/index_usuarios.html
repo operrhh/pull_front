@@ -44,17 +44,10 @@
       {% endif %}
   
 
-    <script>
-        const select = document.getElementById("base_datos");     
-        const selectedValue = localStorage.getItem("selectedValue");
-        if (selectedValue) {
-            select.value = selectedValue;
-        }
-        
-        select.addEventListener("change", function () {
-            localStorage.setItem("selectedValue", this.value);
-        });
-    </script>
+{% comment %} aca {% endcomment %}
+
+{% block script_sistema %} <script src="{% static 'js/boton_sistema.js' %}"></script>{% endblock script_sistema %}
+
 {% block css %} <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">{% endblock css %}
     <div class="d-flex align-items-center mt-3">
       <button id= "buscar" type="submit" class="btn btn-primary">Buscar</button>
@@ -66,23 +59,6 @@
 {% if error_message %}
 <div class="alert alert-danger mt-3">
   {{ error_message }}
-</div>
-<div class="pagination">
-  <span class="step-links">
-      {% if registros_pagina.has_previous %}
-          <a href="?page=1&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">primero</a>
-          <a href="?page={{ registros_pagina.previous_page_number }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">anterior</a>
-      {% endif %}
-
-      <span class="current">
-          Página {{ registros_pagina.number }} de {{ registros_pagina.paginator.num_pages }}.
-      </span>
-
-      {% if registros_pagina.has_next %}
-         <a href="?page={{ registros_pagina.next_page_number }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">siguiente</a>
-         <a href="?page={{ registros_pagina.paginator.num_pages }}&Person_Number={{ formulario_data.Person_Number }}&nombre={{ formulario_data.nombre }}&BusinessUnitName={{ formulario_data.BusinessUnitName }}&LegislationCode={{ formulario_data.LegislationCode }}&base_datos={{ formulario_data.base_datos }}">último</a>
-      {% endif %}
-  </span>
 </div>
 
 {% endif %}
