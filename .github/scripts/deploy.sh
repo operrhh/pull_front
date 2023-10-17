@@ -1,7 +1,7 @@
-# Cambiar al directorio del proyecto
-cd /home/integrasoft/front/pull_front/IntegraSoft_Front
+#!/bin/bash
 
-# Obtener los últimos cambios del repositorio
-git pull origin main
-
-
+# Ejecutar comandos en el servidor remoto
+ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} << 'ENDSSH'
+  cd /home/integrasoft/front/pull_front/IntegraSoft_Front
+  git pull origin main
+ENDSSH
