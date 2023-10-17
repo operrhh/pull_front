@@ -1,3 +1,7 @@
-ssh -o StrictHostKeyChecking=no root@192.168.0.104 'bash -s' < /home/integrasoft/front/pull_front/.github/scripts/deploy.sh
+# Cambiar al directorio del proyecto
+cd /home/integrasoft/front/pull_front/IntegraSoft_Front
+
+# Obtener los últimos cambios del repositorio
+git pull origin main
 
 
