@@ -1,0 +1,86 @@
+    1  sudo dnf update
+    2  ping google.com
+    3  ping google
+    4  ping google.com
+    5  config
+    6  nmcli
+    7  nmcli
+    8  sudo su
+    9  ls
+   10  cd front
+   11  ls
+   12  cd pull_front
+   13  ls
+   14  cd IntegraSoft_Front/
+   15  ls
+   16  phython --version
+   17  cd ..
+   18  ls
+   19  source entorno-virtual/bin/activate
+   20  ls
+   21  python --version
+   22  cd IntegraSoft_Front/
+   23  python --version
+   24  ls
+   25  python manage.py runserver
+   26  ls
+   27  cd IntegraSoft_Front/
+   28  ls
+   29  cd ..
+   30  cd mantenedor_works/
+   31  ls
+   32  cd datos_prueba/
+   33  ls
+   34  nano datos_prueba_hcm.json
+   35  ls
+   36  cd ..
+   37  ls
+   38  cd templates/
+   39  ls
+   40  cd mantenedor_works/
+   41  ls
+   42  nano buscar_usuarios.html 
+   43  cd ..
+   44  ls
+   45  python manage.py runserver
+   46  ls
+   47  cd ..
+   48  ls
+   49  pip install -r requirements.txt
+   50  ls
+   51  cd IntegraSoft_Front/
+   52  ls
+   53  python manage.py runserver
+   54  ls
+   55  cd front
+   56  ls
+   57  cd pull_front/
+   58  LS
+   59  ls
+   60  source entorno-virtual/bin/activate
+   61  ls
+   62  systemctl status nginx
+   63  systemctl reload nginx
+   64  systemctl start nginx
+   65  systemctl start nginx.service
+   66  systemctl status nginx.service
+   67  ls
+   68  cd IntegraSoft_Front/
+   69  ls
+   70  cd IntegraSoft_Front/
+   71  ls
+   72  nano settings.py 
+   73  cd ..
+   74  ls
+   75  cd ..
+   76  ls
+   77  gunicorn IntegraSoft_Front/IntegraSoft_Front.wsgi:application --bind 127.0.0.1:8000 --workers 9
+   78  gunicorn IntegraSoft_Front/IntegraSoft_Front.wsgi:application --bind 0.0.0.0:8000 --workers 9
+   79  ls
+   80  cd IntegraSoft_Front/
+   81  ls
+   82  gunicorn IntegraSoft_Front.wsgi:application --bind 0.0.0.0:8000 --workers 9
+   83  gunicorn IntegraSoft_Front.wsgi:application --bind 127.0.0.1:8000 --workers 9
+   84  history > comandosg.txt
+   85  gunicorn IntegraSoft_Front.wsgi:application --bind 127.0.0.1:8000 --workers 9
+   86  history > comandosg.txt
