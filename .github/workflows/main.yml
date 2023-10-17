@@ -13,8 +13,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run deployment script
-      run: bash .github/scripts/deploy.sh
-      env:
-        SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-
+      run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} 'cd .github/scripts/deploy.sh && git pull origin main'
