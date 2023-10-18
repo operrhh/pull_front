@@ -13,4 +13,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run deployment script
-      run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} 'cd .github/scripts/deploy.sh && git pull origin main'
+      run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_IP }} 'cd /home/integrasoft/front/pull_front && git pull origin main && bash .github/scripts/deploy.sh'
