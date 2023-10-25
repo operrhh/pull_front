@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: ["python", "IntegraSoft_Front/manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./IntegraSoft_Front:/app/IntegraSoft_Front
+    ports:
+      - "8000:8000"
