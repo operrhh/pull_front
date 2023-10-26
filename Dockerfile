@@ -1,9 +1,8 @@
 # Utilizar una imagen base de Python 3.10
 FROM python:3.10
 
-# Establecer variables de entorno para Python y Django
+# Establecer variables de entorno para Python
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=IntegraSoft_Front.settings
 
 # Crear y establecer el directorio de trabajo en el contenedor
 WORKDIR /app
@@ -13,7 +12,10 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el resto del código fuente del proyecto al contenedor
-COPY . /app/
+COPY IntegraSoft_Front /app/IntegraSoft_Front
+
+# Cambiar el directorio de trabajo
+WORKDIR /app/IntegraSoft_Front
 
 # Ejecutar collectstatic
 RUN python manage.py collectstatic --noinput
@@ -23,4 +25,5 @@ EXPOSE 8001
 
 # Comando para ejecutar la aplicación
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+
 
