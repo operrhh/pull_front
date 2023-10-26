@@ -16,7 +16,8 @@ COPY IntegraSoft_Front /app/IntegraSoft_Front
 
 # Cambiar el directorio de trabajo
 WORKDIR /app/IntegraSoft_Front
-
+# Ejecutar collectstatic
+RUN python manage.py collectstatic --noinput
 # Exponer el puerto en el que se ejecutará la aplicación
 EXPOSE 8001
 
