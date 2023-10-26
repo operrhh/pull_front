@@ -6,6 +6,7 @@ services:
     command: ["python", "IntegraSoft_Front/manage.py", "runserver", "0.0.0.0:8002"]
     volumes:
       - ./IntegraSoft_Front:/app/IntegraSoft_Front
+      - ./staticfiles:/app/staticfiles
     ports:
       - "8001:8002"
 
