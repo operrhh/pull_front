@@ -3,10 +3,11 @@ version: '3'
 services:
   web:
     build: .
-    command: ["python", "IntegraSoft_Front/manage.py", "runserver", "0.0.0.0:8002"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8001"]
     volumes:
       - ./IntegraSoft_Front:/app/IntegraSoft_Front
-      - ./staticfiles:/app/staticfiles
+      - ./staticfiles:/app/staticfiles  # Añadir esta línea
     ports:
-      - "8001:8002"
+      - "8001:8001"
+
 
