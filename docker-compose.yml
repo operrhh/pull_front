@@ -8,10 +8,9 @@ services:
     command: ["gunicorn", "IntegraSoft_Front.wsgi:application", "--bind", "0.0.0.0:8001"]
     volumes:
       - ./IntegraSoft_Front:/app/IntegraSoft_Front
-      - ./staticfiles:/app/staticfiles
+      - ./IntegraSoft_Front/staticfiles:/app/staticfiles  # Modificar esta línea
     ports:
       - "8001:8001"
-
   nginx:
     build:
       context: .
