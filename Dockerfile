@@ -1,5 +1,5 @@
 # Utilizar una imagen base de Python 3.10
-FROM python:3.10
+FROM python:3.10 AS build
 
 # Establecer variables de entorno para Python
 ENV PYTHONUNBUFFERED=1
@@ -16,12 +16,20 @@ COPY IntegraSoft_Front /app/IntegraSoft_Front
 
 # Cambiar el directorio de trabajo
 WORKDIR /app/IntegraSoft_Front
+
 # Ejecutar collectstatic
 RUN python manage.py collectstatic --noinput
+
+# Utilizar una imagen base de Nginx
+FROM nginx:alpine
+
+# Copiar los archivos estáticos recopilados a la imagen de Nginx
+COPY --from=build /app/IntegraSoft_Front/staticfiles /static/
+
+# Copiar la configuración de Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Exponer el puerto en el que se ejecutará la aplicación
 EXPOSE 8001
-
-# Comando para ejecutar la aplicación
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
 
 
