@@ -14,8 +14,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el resto del código fuente del proyecto al contenedor
 COPY IntegraSoft_Front /app/IntegraSoft_Front
 COPY IntegraSoft_Front/manage.py /app/
+
+# Ejecutar collectstatic
+RUN python manage.py collectstatic --noinput
+
 # Exponer el puerto en el que se ejecutará la aplicación
-EXPOSE 8000
+EXPOSE 8001
 
 # Comando para ejecutar la aplicación
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
