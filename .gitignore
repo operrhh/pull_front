@@ -1,0 +1,6 @@
+entorno-virtual
+venv
+.env
+*.pot
+*.pyc
+__pycache__/
