@@ -21,19 +21,21 @@ class WorkerServiceHcm:
         else:
             return "No se encontró el trabajador"
 
-    def buscar_usuarios_por_nombre(self, name):
-        params = {'name': name}
-        response = self.global_service.generate_request(self.url, params=params)
-        usuarios = []
-        if response and 'results' in response:
-            for user in response['results']:
-                for name in user['names']:
+    def buscar_usuarios_por_nombre(self, name, personNumber=None):
+            params = {'name': name}
+            if personNumber:
+                params['personNumber'] = personNumber
+
+            response = self.global_service.generate_request(self.url, params=params)
+            usuarios = []
+            if response and 'results' in response:
+                for user in response['results']:
                     usuario = {
-                        'nombre_completo': f"{name.get('first_name', '').strip()} {name.get('last_name', '').strip()}",
+                        'nombre_completo': f"{user['names'][0].get('first_name', '').strip()} {user['names'][0].get('last_name', '').strip()}",
                         'person_number': user.get('person_number', ''),
                         'email': user['emails'][0].get('email_address', '') if user['emails'] else '',
                         'telefono': user['phones'][0].get('phone_number', '') if user['phones'] else '',
                         'direccion': user['addresses'][0].get('addressLine1', '') if user['addresses'] else ''
                     }
                     usuarios.append(usuario)
-        return usuarios
+            return usuarios

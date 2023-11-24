@@ -8,13 +8,33 @@
 <div class="container">
     <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
     <form action="{% url 'buscar_usuarios_mantenedor_works' %}" method="POST" class="mt-4">
-        {% csrf_token %} <!-- Agregar token CSRF para seguridad en formularios POST -->
+        {% csrf_token %}
+
+        <!-- Dropdown para seleccionar la base de datos -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="base_datos">Base de Datos:</label>
+                <select id="base_datos" name="base_datos" class="form-control">
+                    <option value="">Seleccionar base de datos</option>
+                    <option value="HCM" {% if base_datos == 'HCM' %}selected{% endif %}>HCM</option>
+                    <option value="PeopleSoft" {% if base_datos == 'PeopleSoft' %}selected{% endif %}>PeopleSoft</option>
+                </select>
+            </div>
+        </div>
 
         <!-- Campos de búsqueda -->
         <div class="row">
             <div class="col-md-4">
+                <label for="personNumber">Número de Persona:</label>
+                <!-- Asegúrate de que el nombre del campo coincida con el de la vista -->
+                <input type="text" id="personNumber" name="person_number" class="form-control" value="{{ person_number|default:'' }}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
                 <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ formulario_data.name|default:'' }}"> 
+                <input type="text" id="name" name="name" class="form-control" value="{{ name|default:'' }}"> 
             </div>
         </div>
 
@@ -32,8 +52,9 @@
     <div id="grillaUsuarios">
         {% block grilla_usuarios %}
         {% endblock grilla_usuarios %}
-        </div>
-      </div>
+    </div>
+</div>
+
 {% block script_sistema %} <script src="{% static 'js/boton_sistema.js' %}"></script>{% endblock script_sistema %}
 {% block css %} <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">{% endblock css %}
 {% block script_habilitar%} <script src="{% static 'js/habilitar.js' %}"></script>{% endblock script_habilitar %}

@@ -14,6 +14,7 @@ class GlobalService:
                 response = requests.put(url, headers=headers, params=params, json=body_data)
             else:
                 response = requests.get(url, headers=headers, params=params)
+                print(response.url)
 
             if response.status_code == 200:
                 return response.json()
