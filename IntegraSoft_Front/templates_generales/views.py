@@ -6,14 +6,13 @@ from django.contrib import messages
 from IntegraSoft_Front.settings import API_BASE_URL
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from Decorators import auth_decorator
 
+@auth_decorator.token_auth
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "templates_generales/home.html"
 
 # views.py
-from django.contrib.auth import authenticate, login
 
 def login_view(request):
     if request.method == 'POST':

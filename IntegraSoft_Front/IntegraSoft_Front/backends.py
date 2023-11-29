@@ -1,7 +1,8 @@
 import requests
-from django.contrib.auth.models import User
+from .Decorators import auth_decorator
 from django.contrib.auth.backends import BaseBackend
 from IntegraSoft_Front.settings import API_BASE_URL
+
 
 class TokenBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
