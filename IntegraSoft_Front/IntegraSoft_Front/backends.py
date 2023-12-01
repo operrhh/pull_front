@@ -1,28 +1,14 @@
-import requests
-from .Decorators import auth_decorator
-from django.contrib.auth.backends import BaseBackend
-from IntegraSoft_Front.settings import API_BASE_URL
+import requests 
+from django.conf import settings
 
+def authenticate_user (request, username, password):
+    login_url = f"{settings.API_BASE_URL}/login/"
+    response = requests.post(login_url, json={'username': username, 'password': password})
 
-class TokenBackend(BaseBackend):
-    def authenticate(self, request, username=None, password=None):
-        login_url = f"{API_BASE_URL}/login/"
-        response = requests.post(login_url, json={'username': username, 'password': password})
-
-        if response.status_code == 200:
-            token = response.json().get('token')
-            user, created = User.objects.get_or_create(username=username)
-
-            # Guarda el token en la sesión del usuario
-            if request:
-                request.session['token'] = token
-
-            user.save()
-            return user
-        return None
-
-    def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
+    if response.status_code == 200:
+        token = response.json().get('token')
+        # Guarda el token en la sesión del usuario
+        request.session['token'] = token
+        request.session['user'] = username
+        return True
+    return False

@@ -14,7 +14,7 @@
   {% block script_regreso %} <script src="{% static 'js/regreso.js'%}"></script>{% endblock script_regreso %}
   <div class="align-right">
     <!-- Botón para regresar a la página de búsqueda -->
-    <a id="regresar_formulario" href="{% url 'buscar_usuarios_mantenedor_works' %}" class="btn btn-primary">Regresar a la búsqueda</a>
+    <a id="regresar_formulario" href="{% url 'workers:buscar_usuarios_mantenedor_works' %}" class="btn btn-primary">Regresar a la búsqueda</a>
   </div>
 
   <h1 class="text-center mt-4">Detalles del Usuario</h1>

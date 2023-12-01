@@ -30,23 +30,23 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'index_home' %}">{{ user.username | upper }} BIENVENIDO A INTEGRASOFT DE CCU</a>
+            <a class="navbar-brand" href="{% url 'accounts:index_home' %}">{{ user | upper }} BIENVENIDO A INTEGRASOFT DE CCU</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'index_home' %}active{% endif %}" href="{% url 'index_home' %}">Inicio</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index_home' %}active{% endif %}" href="{% url 'accounts:index_home' %}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'index_mantenedor_usuarios' %}active{% endif %}" href="{% url 'index_mantenedor_usuarios' %}">Servicios</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index_mantenedor_usuarios' %}active{% endif %}" href="{% url 'workers:index_mantenedor_usuarios' %}">Servicios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'index_novedades' %}active{% endif %}" href="{% url 'index_novedades' %}">Novedades</a>
                     </li> 
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'index_cuenta' %}active{% endif %}" href="{% url 'index_cuenta' %}">Cuenta</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'index_cuenta' %}active{% endif %}" href="{% url 'cuenta:index_cuenta' %}">Cuenta</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -55,7 +55,7 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Cerrar sesión</a></li>
                         </ul>
                     </li>
                     

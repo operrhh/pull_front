@@ -1,6 +1,8 @@
 function limpiarFormulario() {
   // Limpiar el campo de nombre
-  document.getElementById('name').value = '';
+  document.getElementById('firstName').value = '';
+
+  document.getElementById('lastName').value = '';
 
   document.getElementById('base_datos').value = '';
 

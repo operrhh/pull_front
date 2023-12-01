@@ -7,7 +7,7 @@
 
 <div class="container">
     <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
-    <form action="{% url 'buscar_usuarios_mantenedor_works' %}" method="POST" class="mt-4">
+    <form action="{% url 'workers:buscar_usuarios_mantenedor_works' %}" method="POST" class="mt-4">
         {% csrf_token %}
 
         <!-- Dropdown para seleccionar la base de datos -->
@@ -26,15 +26,18 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="personNumber">Número de Persona:</label>
-                <!-- Asegúrate de que el nombre del campo coincida con el de la vista -->
-                <input type="text" id="personNumber" name="person_number" class="form-control" value="{{ person_number|default:'' }}">
+                <input type="text" id="personNumber" name="personNumber" class="form-control" value="{{ personNumber|default:'' }}">
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-4">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ name|default:'' }}"> 
+                <label for="firstName">Nombre:</label>
+                <input type="text" id="firstName" name="firstName" class="form-control" value="{{ firstName|default:'' }}"> 
+            </div>
+            <div class="col-md-4">
+                <label for="lastName">Apellido:</label>
+                <input type="text" id="lastName" name="lastName" class="form-control" value="{{ lastName|default:'' }}"> 
             </div>
         </div>
 
@@ -51,6 +54,7 @@
     </form>
     <div id="grillaUsuarios">
         {% block grilla_usuarios %}
+        <!-- Aquí se mostrarán los resultados de la búsqueda -->
         {% endblock grilla_usuarios %}
     </div>
 </div>

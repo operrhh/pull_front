@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from mantenedor_works.services.hcm.worker_service_hcm import WorkerServiceHcm
 from mantenedor_works.services.peoplesoft.worker_service_peoplesoft import WorkerServicePeopleSoft
+from Decorators.auth_decorator import token_auth
 
+@token_auth
 def index(request):
-    return render(request, 'mantenedor_works/index_usuarios.html')
+    user = request.session['user']
+    return render(request, 'mantenedor_works/index_usuarios.html',{'user': user})
 
 def get_worker_service(base_datos, request):
     if base_datos == 'HCM':
@@ -15,25 +18,30 @@ def get_worker_service(base_datos, request):
 
 def buscar_usuarios(request):
     usuarios = []
-    name = ""  
-    person_number = ""  
+    firstName = ""
+    lastName = ""  
+    personNumber = ""  
     base_datos = ""  
+    user = request.session.get('user', {})  # Obtener usuario de la sesión
 
     if request.method == 'POST':
         base_datos = request.POST.get('base_datos', '')
-        name = request.POST.get('name', '')
-        person_number = request.POST.get('person_number', '')
+        firstName = request.POST.get('firstName', '')
+        lastName = request.POST.get('lastName', '')
+        personNumber = request.POST.get('personNumber', '')
 
         try:
             worker_service = get_worker_service(base_datos, request)
-            # Asegúrate de que el método se llama correctamente
-            usuarios = worker_service.buscar_usuarios_por_nombre(name, person_number)
+            usuarios = worker_service.buscar_usuarios_por_nombre(firstName, lastName, personNumber)
         except ValueError as e:
+            # Manejar el error si es necesario
             pass
 
     return render(request, 'mantenedor_works/buscar_usuarios.html', {
         'usuarios': usuarios, 
-        'name': name, 
-        'person_number': person_number,
-        'base_datos': base_datos
+        'firstName': firstName,
+        'lastName': lastName, 
+        'personNumber': personNumber,
+        'base_datos': base_datos,
+        'user': user  # Usuario logueado
     })

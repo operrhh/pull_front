@@ -1,9 +1,11 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
-from .views import IndexView, login_view
+from .views import login_view, home_view, logout_view
+
+app_name = 'accounts'
+
 urlpatterns = [
-    path('accounts/login/', login_view, name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    path('', IndexView.as_view(), name="index_home"),
-    # Otras URLs 
+    path('home/', home_view, name='index_home'),
+    path('', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+    # Otras URLs
 ]

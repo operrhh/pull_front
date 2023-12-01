@@ -133,8 +133,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGIN_REDIRECT_URL = reverse_lazy('index_home')
-LOGOUT_REDIRECT_URL = reverse_lazy('login') 
+LOGIN_REDIRECT_URL = reverse_lazy('accounts:index_home')
+LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login') 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
