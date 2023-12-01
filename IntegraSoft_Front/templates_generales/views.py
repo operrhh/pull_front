@@ -4,8 +4,12 @@ from django.contrib import messages
 from IntegraSoft_Front.settings import API_BASE_URL
 from Decorators.auth_decorator import token_auth
 
-
 def login_view(request):
+    # Verifica si el usuario ya está autenticado
+    if 'token' in request.session:
+        # Si ya hay un token en la sesión, redirige al usuario a la página principal
+        return redirect('accounts:index_home')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -24,7 +28,7 @@ def login_view(request):
         else:
             # Si el login falla, muestra un mensaje de error
             messages.error(request, 'Login fallido. Por favor, intenta de nuevo.')
-      
+
     # Renderiza la plantilla de login si no es una solicitud POST o si el login falla
     return render(request, 'templates_generales/login.html')
 
@@ -41,3 +45,4 @@ def logout_view(request):
     # Redirige al usuario a la página de inicio de sesión
     return redirect('accounts:login')
 
+#validacion de usuario conectado antes de pasar al index
