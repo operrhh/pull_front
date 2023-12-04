@@ -4,6 +4,8 @@ function limpiarFormulario() {
 
   document.getElementById('lastName').value = '';
 
+  document.getElementById('personNumber').value = '';
+
   document.getElementById('base_datos').value = '';
 
   document.getElementById('grillaUsuarios').innerHTML = '';
