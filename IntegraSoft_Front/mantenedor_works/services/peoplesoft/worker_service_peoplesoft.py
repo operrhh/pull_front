@@ -24,11 +24,11 @@ class WorkerServicePeopleSoft:
                 usuarios.append(usuario)
         return usuarios
 
-    def get_worker_peoplesoft(self, emplid):
-        response = self.global_service.generate_request(f"{self.url}?emplid={emplid}")
+    def get_worker(self, personNumber):
+        response = self.global_service.generate_request(f"{self.url}?personNumber={personNumber}")
         if response and 'results' in response:
             for user in response['results']:
-                if user.get('emplid') == emplid:
+                if user.get('emplid') == personNumber:  # Asumiendo que emplid es equivalente a personNumber
                     return self._procesar_usuario_peoplesoft(user)
         return "No se encontró el trabajador"
 

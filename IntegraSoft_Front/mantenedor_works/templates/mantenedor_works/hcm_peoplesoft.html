@@ -2,35 +2,19 @@
 {% load static %}
 
 {% block error %}
-    
-      {% if numero_discrepancias > 0 %}
-      <div class="alert alert-danger">
-          Se detectaron {{ numero_discrepancias }} diferencia(s) entre los datos de HCM y PeopleSoft.
-      </div>
-      {% endif %}
-
+    <!-- Aquí puedes incluir la lógica para mostrar errores o discrepancias -->
 {% endblock error %}
-
-
-
 
 {% block hcm_block %}
 <div class="hcm">
     <h3>Datos de HCM</h3>
-    {% if usuarios_hcm %}
+    {% if detalles_hcm %}
       <div class="mt-4">
-          <p>
-              <strong>Empleador:</strong> 
-              <span {% if usuarios_peoplesoft and usuarios_hcm.0.workRelationships.0.LegalEmployerName != usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName %} class="data-error"{% endif %}>
-                  {{ usuarios_hcm.0.workRelationships.0.LegalEmployerName }}
-              </span>
-          </p>
-          <p>
-              <strong>Unidad de negocio:</strong>
-              <span {% if usuarios_peoplesoft and usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName != usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName %}class="data-error"{% endif %}>
-                  {{ usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName }}
-              </span>
-          </p>
+          <!-- Ejemplo de cómo mostrar datos de HCM -->
+          <p><strong>Nombre Completo:</strong> {{ detalles_hcm.nombre_completo }}</p>
+          <p><strong>Email:</strong> {{ detalles_hcm.email }}</p>
+          <p><strong>Teléfono:</strong> {{ detalles_hcm.telefono }}</p>
+          <!-- Agrega más campos según sea necesario -->
       </div>
     {% else %}
       <p>No se encontraron datos en HCM para este usuario.</p>
@@ -41,20 +25,13 @@
 {% block peoplesoft_block %}
 <div class="peoplesoft">
     <h3>Datos de PeopleSoft</h3>
-    {% if usuarios_peoplesoft %}
+    {% if detalles_peoplesoft %}
       <div class="mt-4">
-          <p>
-              <strong>Empleador:</strong> 
-              <span {% if usuarios_hcm and usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName != usuarios_hcm.0.workRelationships.0.LegalEmployerName %}class="data-error"{% endif %}>
-                  {{ usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName }}
-              </span>
-          </p>
-          <p>
-              <strong>Unidad de negocio:</strong>
-              <span {% if usuarios_hcm and usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName != usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName %}class="data-error"{% endif %}>
-                  {{ usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName }}
-              </span>
-          </p>
+          <!-- Ejemplo de cómo mostrar datos de PeopleSoft -->
+          <p><strong>Nombre Completo:</strong> {{ detalles_peoplesoft.nombre_completo }}</p>
+          <p><strong>Email:</strong> {{ detalles_peoplesoft.email }}</p>
+          <p><strong>Teléfono:</strong> {{ detalles_peoplesoft.telefono }}</p>
+          <!-- Agrega más campos según sea necesario -->
       </div>
     {% else %}
       <p>No se encontraron datos en PeopleSoft para este usuario.</p>
