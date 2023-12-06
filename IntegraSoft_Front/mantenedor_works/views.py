@@ -64,6 +64,7 @@ def obtener_detalles_usuario(request, base_datos, user_id):
 # views.py
 def detalles_usuario(request, base_datos, user_id):
     global resultados_hcm, resultados_peoplesoft
+    user = request.session['user']
 
     # Buscar detalles en HCM
     detalles_hcm = next((usuario for usuario in resultados_hcm if usuario['personNumber'] == user_id), None)
@@ -81,6 +82,8 @@ def detalles_usuario(request, base_datos, user_id):
         detalles_peoplesoft = {}  # O manejar de otra manera
 
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
+        'user': user,  # Usuario logueado
+        'base_datos': base_datos,  # 'HCM' o 'PeopleSoft
         'detalles_hcm': detalles_hcm,
         'detalles_peoplesoft': detalles_peoplesoft
     })

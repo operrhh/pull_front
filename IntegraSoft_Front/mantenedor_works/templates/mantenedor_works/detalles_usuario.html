@@ -19,13 +19,19 @@
 
   <h1 class="text-center mt-4">Detalles del Usuario</h1>
   <div class="mt-4">
-      {% if usuario %}
-    <h2>{{ usuario.names.0.FirstName }} {{ usuario.names.0.LastName }}</h2>
-    <p><strong>Número de Persona:</strong> {{ usuario.PersonNumber }}</p>
-    <p><strong>Ciudad:</strong> {{ usuario.addresses.0.TownOrCity }}</p>
+    {% if base_datos == 'HCM' and detalles_hcm %}
+      <h2>{{ detalles_hcm.nombre_completo }}</h2>
+      <p><strong>Número de Persona:</strong> {{ detalles_hcm.personNumber }}</p>
+      <p><strong>Email:<strong> {{ detalles_hcm.email }}</p>
+      <!-- Agrega más campos de detalles_hcm según sea necesario -->
+    {% elif base_datos == 'PeopleSoft' and detalles_peoplesoft %}
+      <h2>{{ detalles_peoplesoft.nombre_completo }}</h2>
+      <p><strong>Número de Persona:</strong> {{ detalles_peoplesoft.personNumber }}</p>
+      <p><strong>Email:<strong> {{ detalles_peoplesoft.email }}</p>
+      <!-- Agrega más campos de detalles_peoplesoft según sea necesario -->
     {% else %}
-    <p>No se encontraron datos para este usuario.</p>
-  {% endif %}
+      <p>No se encontraron datos para este usuario.</p>
+    {% endif %}
 
     <!-- Aquí puedes agregar más lógica para detectar diferencias entre los sistemas -->
   {%block error %}     
