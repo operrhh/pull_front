@@ -23,6 +23,7 @@ def login_view(request):
             token = response.json().get('token')
             request.session['token'] = token
             request.session['user'] = username
+            request.session.save()
             # Redirige a la página principal
             return redirect('accounts:index_home')
         else:

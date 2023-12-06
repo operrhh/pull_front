@@ -21,6 +21,7 @@ app_name = 'workers'
 urlpatterns = [
     path('', views.index, name="index_mantenedor_usuarios"),  # Quita login_required
     path('buscar_usuarios', views.buscar_usuarios, name="buscar_usuarios_mantenedor_works"),
+    path('detalles/<str:base_datos>/<str:user_id>/', views.detalles_usuario, name='detalles_usuario'),
    ]
 
 

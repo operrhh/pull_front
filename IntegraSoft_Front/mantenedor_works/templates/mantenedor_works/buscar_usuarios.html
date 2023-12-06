@@ -31,7 +31,7 @@
             <td>{{ usuario.telefono }}</td>
             <td>{{ usuario.direccion }}</td>
             <td>
-              <a href="#" class="btn btn-primary">Ver Detalle</a>
+              <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
             </td>
           </tr>
           {% endfor %}

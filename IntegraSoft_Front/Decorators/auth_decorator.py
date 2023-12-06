@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 from functools import wraps
+from django.shortcuts import redirect
 
 def token_auth(view_func):
     @wraps(view_func)
@@ -13,3 +14,4 @@ def token_auth(view_func):
             return HttpResponseForbidden("No estás autorizado para ver esta página")
 
     return _wrapped_view
+

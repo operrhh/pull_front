@@ -14,12 +14,20 @@ class WorkerServiceHcm:
         else:
             return "No se encontraron trabajadores"
 
-    def get_worker(self, pk):
-        response = self.global_service.generate_request(f"{self.url}{pk}/")
-        if response and 'results' in response:
-            return response['results'][0]
-        else:
-            return "No se encontró el trabajador"
+    def get_worker(self, personNumber):
+            try:
+                # Construir la URL con el parámetro personNumber
+                url = f"{self.url}?personNumber={personNumber}"
+                response = self.global_service.generate_request(url)
+                if response and 'results' in response:
+                    # Asumiendo que 'results' es una lista y quieres el primer resultado
+                    return response['results'][0] if response['results'] else None
+                else:
+                    return None
+            except ValueError as e:
+                # Manejar el error de decodificación JSON
+                print(f"Error al decodificar JSON: {e}")
+                return None
 
     def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None):
         params = {}
