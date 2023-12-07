@@ -1,6 +1,6 @@
 from django.http import HttpResponseForbidden
 from functools import wraps
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 def token_auth(view_func):
     @wraps(view_func)
@@ -11,7 +11,7 @@ def token_auth(view_func):
             return view_func(request, *args, **kwargs)
         else:
             # Si el usuario no está autenticado, puedes redirigirlo o mostrar un error
-            return HttpResponseForbidden("No estás autorizado para ver esta página")
+            return redirect('accounts:login')
 
     return _wrapped_view
 
