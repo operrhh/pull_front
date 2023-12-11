@@ -18,7 +18,7 @@ def get_worker_service(base_datos, request):
         return WorkerServicePeopleSoft(request)
     else:
         raise ValueError("Base de datos no soportada")
-
+@token_auth
 def buscar_usuarios(request):
     global resultados_hcm, resultados_peoplesoft
     usuarios = []
@@ -64,6 +64,7 @@ def obtener_detalles_usuario(request, base_datos, user_id):
     return service.get_worker(user_id)
 
 # views.py
+@token_auth
 def detalles_usuario(request, base_datos, user_id):
     global resultados_hcm, resultados_peoplesoft
     user = request.session['user']
