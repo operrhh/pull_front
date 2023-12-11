@@ -14,11 +14,14 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="base_datos">Base de Datos:</label>
-                <select id="base_datos" name="base_datos" class="form-control">
+                <select id="base_datos" name="base_datos" class="form-control" onchange="habilitarCampos()">
                     <option value="">Seleccionar base de datos</option>
                     <option value="HCM" {% if base_datos == 'HCM' %}selected{% endif %}>HCM</option>
                     <option value="PeopleSoft" {% if base_datos == 'PeopleSoft' %}selected{% endif %}>PeopleSoft</option>
                 </select>
+                <span id="mensaje" class="text-success" style="display: none; opacity: 1; transition: opacity 2s;">
+                    Para iniciar el proceso de búsqueda primero debe seleccionar una base de datos
+                </span>
             </div>
         </div>
 
@@ -40,6 +43,7 @@
                 <input type="text" id="lastName" name="lastName" class="form-control" value="{{ lastName|default:'' }}"> 
             </div>
         </div>
+        
 
         {% if error_message %}
         <div class="alert alert-danger mt-3">

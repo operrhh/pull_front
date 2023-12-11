@@ -1,7 +1,6 @@
-// funciona
 function habilitarCampos() {
     let baseDatos = document.getElementById('base_datos').value;
-    let campos = document.querySelectorAll('#Person_Number, #nombre, #BusinessUnitName, #DepartmentName');
+    let campos = document.querySelectorAll('#personNumber, #firstName, #lastName');
     let mensaje = document.getElementById('mensaje');
     
     campos.forEach(campo => {
