@@ -1,9 +1,11 @@
+import logging
 from django.shortcuts import render, get_object_or_404
 from mantenedor_works.services.hcm.worker_service_hcm import WorkerServiceHcm
 from mantenedor_works.services.peoplesoft.worker_service_peoplesoft import WorkerServicePeopleSoft
 from Decorators.auth_decorator import token_auth
 from var.global_vars import resultados_hcm, resultados_peoplesoft
 
+logger = logging.getLogger(__name__)
 @token_auth
 def index(request):
     user = request.session['user']
@@ -66,24 +68,36 @@ def detalles_usuario(request, base_datos, user_id):
     global resultados_hcm, resultados_peoplesoft
     user = request.session['user']
 
-    # Buscar detalles en HCM
-    detalles_hcm = next((usuario for usuario in resultados_hcm if usuario['personNumber'] == user_id), None)
+    detalles_hcm = None
+    detalles_peoplesoft = None
 
-    # Si no se encuentra en HCM, mostrar error
-    if detalles_hcm is None:
-        return render(request, 'error.html', {'mensaje': 'Usuario no encontrado en HCM'})
+    # Si se selecciona PeopleSoft
+    if base_datos == 'PeopleSoft':
+        # Obtener detalles de PeopleSoft de la lista
+        detalles_peoplesoft = next((usuario for usuario in resultados_peoplesoft if usuario['personNumber'] == user_id), None)
+        
+        # Consultar a HCM para obtener detalles
+        service_hcm = WorkerServiceHcm(request)
+        detalles_hcm = service_hcm.get_worker(user_id)
 
-    # Buscar detalles en PeopleSoft
-    service_peoplesoft = WorkerServicePeopleSoft(request)
-    detalles_peoplesoft = service_peoplesoft.get_worker(user_id)
+    # Si se selecciona HCM
+    elif base_datos == 'HCM':
+        # Obtener detalles de HCM de la lista
+        detalles_hcm = next((usuario for usuario in resultados_hcm if usuario['personNumber'] == user_id), None)
+        
+        # Consultar a PeopleSoft para obtener detalles
+        service_peoplesoft = WorkerServicePeopleSoft(request)
+        detalles_peoplesoft = service_peoplesoft.get_worker(user_id)
 
-    # Si no se encuentra en PeopleSoft, puedes decidir cómo manejarlo
-    if detalles_peoplesoft is None:
-        detalles_peoplesoft = {}  # O manejar de otra manera
+    # Manejar casos en que no se encuentran los detalles
+    if detalles_hcm is None or detalles_peoplesoft is None:
+        return render(request, 'error.html', {'mensaje': 'Usuario no encontrado en las bases de datos seleccionadas'})
+    print(detalles_hcm)
+    print(detalles_peoplesoft)
 
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
         'user': user,  # Usuario logueado
-        'base_datos': base_datos,  # 'HCM' o 'PeopleSoft
+        'base_datos': base_datos,
         'detalles_hcm': detalles_hcm,
         'detalles_peoplesoft': detalles_peoplesoft
     })

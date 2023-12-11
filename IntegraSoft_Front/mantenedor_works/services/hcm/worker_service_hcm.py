@@ -16,18 +16,27 @@ class WorkerServiceHcm:
 
     def get_worker(self, personNumber):
             try:
-                # Construir la URL con el parámetro personNumber
                 url = f"{self.url}?personNumber={personNumber}"
                 response = self.global_service.generate_request(url)
                 if response and 'results' in response:
-                    # Asumiendo que 'results' es una lista y quieres el primer resultado
-                    return response['results'][0] if response['results'] else None
+                    # Procesar la respuesta para extraer los datos relevantes
+                    worker_data = response['results'][0] if response['results'] else None
+                    if worker_data:
+                        return {
+                            'nombre_completo': self._obtener_campo(worker_data.get('names', []), 'display_name'),
+                            'personNumber': self._obtener_campo(worker_data.get('person_number', []), 'person_number'),
+                            'email': self._obtener_campo(worker_data.get('emails', []), 'email_address'),
+                            'telefono': self._obtener_campo(worker_data.get('phones', []), 'phone_number'),
+                            'direccion': self._obtener_campo(worker_data.get('addresses', []), 'addressLine1')
+                        }
+                    else:
+                        return None
                 else:
                     return None
             except ValueError as e:
-                # Manejar el error de decodificación JSON
                 print(f"Error al decodificar JSON: {e}")
                 return None
+
 
     def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None):
         params = {}
