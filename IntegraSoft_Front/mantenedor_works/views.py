@@ -45,6 +45,7 @@ def buscar_usuarios(request):
                 pass
 
     return render(request, 'mantenedor_works/buscar_usuarios.html', {
+            'path': request.path,
             'usuarios': resultados_hcm if base_datos == 'HCM' else resultados_peoplesoft, 
             'firstName': firstName,
             'lastName': lastName, 
