@@ -55,11 +55,13 @@
         .navbar-nav .nav-link,
         .navbar-brand {
             color: white;
+            
         }
         /* Estilo para el elemento de navegación actual */
         .navbar-nav .nav-item .nav-link.active {
             background-color: white;
             color: black;
+            
           
         }
     </style>
@@ -78,10 +80,10 @@
                         <a class="nav-link {% if request.resolver_match.url_name == 'index_home' %}active{% endif %}" href="{% url 'accounts:index_home' %}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        {% with "works/" as works_path %}
-                        <a class="nav-link {% if request.path == '/works/' or works_path in request.path %}active{% endif %}" href="{% url 'workers:index_mantenedor_usuarios' %}">Servicios</a>
-                    {% endwith %}
-                    
+                {% with "works/" as works_path %}
+    <a class="nav-link {% if request.path == '/works/' or works_path in request.path %}active{% endif %}" href="{% url 'workers:index_mantenedor_usuarios' %}">Servicios</a>
+{% endwith %}
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'index_novedades' %}active{% endif %}" href="{% url 'index_novedades' %}">Novedades</a>
