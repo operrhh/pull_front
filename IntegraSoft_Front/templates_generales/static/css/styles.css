@@ -155,3 +155,16 @@ h1 {
         max-width: 80%;
     }
 }
+
+/*Saludo*/
+.saludo h2 {
+    overflow: hidden; /* Esconde el contenido que excede el ancho del elemento */
+    white-space: nowrap; /* Asegúrate de que el texto esté en una sola línea */
+    width: 0;
+    animation: aparecer 5s forwards; /* Define la animación */
+}
+
+@keyframes aparecer {
+    from { width: 0; }
+    to { width: 100%; }
+}

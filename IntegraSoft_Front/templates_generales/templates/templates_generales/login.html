@@ -23,7 +23,26 @@
                 <div class="w-100">
                     <!-- Contenido del formulario -->
                     <img src="{% static 'images/integrasoft_png.PNG' %}" alt="Logo" class="img-fluid mb-4">
-                    <h2 class="h4 mb-3">Hello! Good Morning</h2>
+                    <div class="saludo">
+                        <h2 id="saludo">¡Hola, <span id="parte-del-dia"></span>!</h2>
+                    </div>
+                    
+                    <script>
+                        window.onload = function() {
+                            var parteDelDia = document.getElementById("parte-del-dia");
+                            var hora = new Date().getHours();
+                        
+                            if (hora < 12) {
+                                parteDelDia.innerHTML = "buenos días";
+                            } else if (hora < 18) {
+                                parteDelDia.innerHTML = "buenas tardes";
+                            } else {
+                                parteDelDia.innerHTML = "buenas noches";
+                            }
+                        };
+                        </script>
+                        
+                        
                     <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
