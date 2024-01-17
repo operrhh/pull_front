@@ -119,7 +119,7 @@ TIME_ZONE = 'America/Santiago'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:index_home')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login') 

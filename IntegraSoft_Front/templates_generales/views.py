@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from IntegraSoft_Front.settings import API_BASE_URL
 from Decorators.auth_decorator import token_auth
-
+from django.utils import timezone
 def login_view(request):
     # Verifica si el usuario ya está autenticado
     if 'token' in request.session:
@@ -13,7 +13,7 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+    
         # Realiza la solicitud de autenticación a tu API
         login_url = f"{API_BASE_URL}/login/"
         response = requests.post(login_url, json={'username': username, 'password': password})
@@ -29,7 +29,6 @@ def login_view(request):
         else:
             # Si el login falla, muestra un mensaje de error
             messages.error(request, 'Login fallido. Por favor, intenta de nuevo.')
-
     # Renderiza la plantilla de login si no es una solicitud POST o si el login falla
     return render(request, 'templates_generales/login.html')
 

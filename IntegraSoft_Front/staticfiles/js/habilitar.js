@@ -10,7 +10,7 @@ function habilitarCampos() {
     if (!baseDatos) {
         mensaje.style.display = 'inline';
         mensaje.style.opacity = '1';
-        setTimeout(() => {
+        setTimeout(() => {3
             mensaje.style.opacity = '0';
             setTimeout(() => {
                 mensaje.style.display = 'none';
