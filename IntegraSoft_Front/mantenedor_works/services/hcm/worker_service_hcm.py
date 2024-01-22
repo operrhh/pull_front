@@ -9,36 +9,73 @@ class WorkerServiceHcm:
 
     def get_workers(self, params={}):
         response = self.global_service.generate_request(self.url, params=params)
-        if response and 'results' in response:
-            return response['results']
+        if response and 'items' in response:
+            return response['items']
         else:
             return "No se encontraron trabajadores"
 
     def get_worker(self, personNumber):
-            try:
-                url = f"{self.url}?personNumber={personNumber}"
-                response = self.global_service.generate_request(url)
-                if response and 'results' in response:
-                    # Procesar la respuesta para extraer los datos relevantes
-                    worker_data = response['results'][0] if response['results'] else None
-                    if worker_data:
-                        return {
-                            'nombre_completo': self._obtener_campo(worker_data.get('names', []), 'display_name'),
-                            'personNumber': self._obtener_campo(worker_data.get('person_number', []), 'person_number'),
-                            'email': self._obtener_campo(worker_data.get('emails', []), 'email_address'),
-                            'telefono': self._obtener_campo(worker_data.get('phones', []), 'phone_number'),
-                            'direccion': self._obtener_campo(worker_data.get('addresses', []), 'addressLine1')
-                        }
-                    else:
-                        return None
-                else:
-                    return None
-            except ValueError as e:
-                print(f"Error al decodificar JSON: {e}")
+        try:
+            url = f"{self.url}?personNumber={personNumber}&manyWorkers=false"
+            response = self.global_service.generate_request(url)
+
+            if response:
+                return self._procesar_usuario_hcm(response)
+            else:
                 return None
+        except Exception as e:
+            print(f"Error al procesar la respuesta de la API: {e}")
+            return None
+    def _procesar_usuario_hcm(self, worker_data):
+    # Asume que worker_data es un diccionario directamente desde el JSON
+        nombres = worker_data.get('names', [])
+        emails = worker_data.get('emails', [])
+        telefonos = worker_data.get('phones', [])
+        direcciones = worker_data.get('addresses', [])
+        relaciones_laborales = worker_data.get('work_relationships', [])
+
+        nombre_completo = nombres[0].get('display_name', '') if nombres else ''
+        email = emails[0].get('email_address', '') if emails else ''
+        telefono = telefonos[0].get('phone_number', '') if telefonos else ''
+        direccion = direcciones[0].get('addressLine1', '') if direcciones else ''
+        department_name = (relaciones_laborales[0].get('assignment', {}).get('department_name', '') 
+                            if relaciones_laborales else '')
+
+        return {
+            'nombre_completo': nombre_completo,
+            'personNumber': worker_data.get('person_number', ''),
+            'email': email,
+            'telefono': telefono,
+            'direccion': direccion,
+            'department_name': department_name
+        }
 
 
-    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None):
+    def _procesar_usuario_hcm(self, worker_data):
+        # Procesamiento similar a PeopleSoft
+        names = worker_data.get('names', [])
+        emails = worker_data.get('emails', [])
+        phones = worker_data.get('phones', [])
+        addresses = worker_data.get('addresses', [])
+        work_relationships = worker_data.get('work_relationships', [])
+
+        nombre_completo = names[0].get('display_name', '') if names else ''
+        email = emails[0].get('email_address', '') if emails else ''
+        telefono = phones[0].get('phone_number', '') if phones else ''
+        direccion = addresses[0].get('addressLine1', '') if addresses else ''
+        department_name = (work_relationships[0].get('assignment', {}).get('department_name', '') 
+                            if work_relationships else '')
+
+        return {
+            'nombre_completo': nombre_completo,
+            'personNumber': worker_data.get('person_number', ''),
+            'email': email,
+            'telefono': telefono,
+            'direccion': direccion,
+            'department_name': department_name
+        }
+
+    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):
         params = {}
         if firstName:
             params['firstName'] = firstName
@@ -46,24 +83,18 @@ class WorkerServiceHcm:
             params['lastName'] = lastName
         if personNumber:    
             params['personNumber'] = personNumber
+        if department:
+            params['department'] = department
 
         response = self.global_service.generate_request(self.url, params=params)
         usuarios = []
-        if response and 'results' in response:
-            for user in response['results']:
-                # Utiliza el campo full_name para el nombre completo
-                nombre_completo = self._obtener_campo(user.get('names', []), 'display_name')
-
-                email = self._obtener_campo(user.get('emails', []), 'email_address')
-                telefono = self._obtener_campo(user.get('phones', []), 'phone_number')
-                direccion = self._obtener_campo(user.get('addresses', []), 'addressLine1')
-
+        if response and 'items' in response:
+            for user in response['items']:
                 usuario = {
-                    'nombre_completo': nombre_completo,
+                    'nombre_completo': user.get('display_name', ''),
                     'personNumber': user.get('person_number', ''),
-                    'email': email,
-                    'telefono': telefono,
-                    'direccion': direccion
+                    'department_name': user.get('department_name', '')
+                    # Aquí puedes agregar más campos si la API los proporciona
                 }
                 usuarios.append(usuario)
         return usuarios

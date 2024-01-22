@@ -4,9 +4,9 @@
 {% block grilla_usuarios %}
 {% block css %} 
 <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">
-{% endblock css %} 
+{% endblock css %}
 
-<body>  
+<div class="container">
   {% if usuarios %}
     <h2>Resultados de Búsqueda:</h2>
     <div class="table-responsive">
@@ -16,9 +16,7 @@
           <tr>
             <th>Número de Persona</th>
             <th>Nombre Completo</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
+            <th>Departamento</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -27,21 +25,23 @@
           <tr>
             <td>{{ usuario.personNumber }}</td>
             <td>{{ usuario.nombre_completo }}</td>
-            <td>{{ usuario.email }}</td>
-            <td>{{ usuario.telefono }}</td>
-            <td>{{ usuario.direccion }}</td>
+            <td>{{ usuario.department_name }}</td>
             <td>
+              <!-- Asegúrate de que 'base_datos' y 'usuario.personNumber' sean proporcionados correctamente por la vista -->
               <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
             </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4">No se encontraron resultados.</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
-      <!-- Aquí puedes agregar la paginación si es necesaria -->
     </div>
   {% else %}
     <p>No se encontraron resultados.</p>
   {% endif %}
-</body>
+</div>
 
 {% endblock grilla_usuarios %}

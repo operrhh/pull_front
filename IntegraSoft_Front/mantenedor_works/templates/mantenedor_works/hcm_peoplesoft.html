@@ -9,15 +9,15 @@
 <div class="hcm">
     <h3>Datos de HCM</h3>
     {% if detalles_hcm %}
-      <div class="mt-4">
-          <!-- Ejemplo de cómo mostrar datos de HCM -->
-          <p><strong>Nombre Completo:</strong> {{ detalles_hcm.nombre_completo }}</p>
-          <p><strong>Email:</strong> {{ detalles_hcm.email }}</p>
-          <p><strong>Teléfono:</strong> {{ detalles_hcm.telefono }}</p>
-          <!-- Agrega más campos según sea necesario -->
-      </div>
+        <div class="mt-4">
+            <!-- Ejemplo de cómo mostrar datos de HCM -->
+            <p><strong>Nombre Completo:</strong> {{ detalles_hcm.nombre_completo }}</p>
+            <p><strong>Email:</strong> {{ detalles_hcm.email }}</p>
+            <p><strong>Teléfono:</strong> {{ detalles_hcm.telefono }}</p>
+            <!-- Agrega más campos según sea necesario -->
+        </div>
     {% else %}
-      <p>No se encontraron datos en HCM para este usuario.</p>
+        <p>No se encontraron datos en HCM para este usuario.</p>
     {% endif %}
 </div>
 {% endblock hcm_block %}
@@ -26,15 +26,15 @@
 <div class="peoplesoft">
     <h3>Datos de PeopleSoft</h3>
     {% if detalles_peoplesoft %}
-      <div class="mt-4">
-          <!-- Ejemplo de cómo mostrar datos de PeopleSoft -->
-          <p><strong>Nombre Completo:</strong> {{ detalles_peoplesoft.nombre_completo }}</p>
-          <p><strong>Email:</strong> {{ detalles_peoplesoft.email }}</p>
-          <p><strong>Teléfono:</strong> {{ detalles_peoplesoft.telefono }}</p>
-          <!-- Agrega más campos según sea necesario -->
-      </div>
+        <div class="mt-4">
+            <!-- Ejemplo de cómo mostrar datos de PeopleSoft -->
+            <p><strong>Nombre Completo:</strong> {{ detalles_peoplesoft.nombre_completo }}</p>
+            <p><strong>Email:</strong> {{ detalles_peoplesoft.email }}</p>
+            <p><strong>Teléfono:</strong> {{ detalles_peoplesoft.telefono }}</p>
+            <!-- Agrega más campos según sea necesario -->
+        </div>
     {% else %}
-      <p>No se encontraron datos en PeopleSoft para este usuario.</p>
+        <p>No se encontraron datos en PeopleSoft para este usuario.</p>
     {% endif %}
 </div>
 {% endblock peoplesoft_block %}

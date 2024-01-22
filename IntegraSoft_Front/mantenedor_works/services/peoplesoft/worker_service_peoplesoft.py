@@ -7,7 +7,7 @@ class WorkerServicePeopleSoft:
         self.url = f"{API_BASE_URL}/worker/peoplesoft/"
         self.global_service = GlobalService(request)
 
-    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None):
+    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):
         params = {}
         if firstName:
             params['firstName'] = firstName
@@ -15,6 +15,8 @@ class WorkerServicePeopleSoft:
             params['lastName'] = lastName
         if personNumber:
             params['personNumber'] = personNumber
+        if department:
+            params['department'] = department  # Agregar el filtro de departamento
 
         response = self.global_service.generate_request(self.url, params=params)
         usuarios = []
@@ -24,20 +26,34 @@ class WorkerServicePeopleSoft:
                 usuarios.append(usuario)
         return usuarios
 
+
     def get_worker(self, personNumber):
-        response = self.global_service.generate_request(f"{self.url}?personNumber={personNumber}")
-        if response and 'results' in response:
-            for user in response['results']:
-                if user.get('emplid') == personNumber:  # Asumiendo que emplid es equivalente a personNumber
-                    return self._procesar_usuario_peoplesoft(user)
-        return "No se encontró el trabajador"
+        try:
+            # Modifica la URL para incluir manyWorkers=false
+            url = f"{API_BASE_URL}/worker/peoplesoft/?manyWorkers=false&personNumber={personNumber}"
+
+            # Realizar la solicitud a la API
+            response = self.global_service.generate_request(url)
+            if response and 'results' in response:
+                worker_data = response['results'][0] if response['results'] else None
+                if worker_data:
+                    # Procesa y devuelve los datos del trabajador
+                    return self._procesar_usuario_peoplesoft(worker_data)
+                else:
+                    return None
+            else:
+                return None
+        except ValueError as e:
+            print(f"Error al decodificar JSON: {e}")
+            return None
 
     def _procesar_usuario_peoplesoft(self, user):
+        nombre_completo = f"{user.get('first_name', '')} {user.get('middle_name', '').strip()} {user.get('last_name', '')}".strip()
         return {
-            'nombre_completo': user.get('name', ''),   # SE DEBE CAMBIAR EL CAMPO DE BUSQUEDA POR FIRST NAME Y LAST NAME IGUAL QUE HCM
+            'nombre_completo': nombre_completo,
             'personNumber': user.get('emplid', ''),
-            'email': user.get('email', ''),  # Asumiendo que hay un campo email
+            'email': user.get('email', ''),
             'telefono': user.get('home_phone', ''),
-            'direccion': user.get('address1', '')
-            # Agrega más campos según sea necesario
+            'direccion': user.get('address1', ''),
+            'department_name': user.get('deptname', '')  # Campo agregado para el departamento
         }

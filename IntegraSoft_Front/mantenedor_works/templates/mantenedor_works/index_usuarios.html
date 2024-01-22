@@ -1,10 +1,12 @@
 {% extends 'templates_generales/template_main.html' %}
 {% load static %}
 {% block content %}
-
+<script type="text/javascript">
+    var apiBaseUrl = "{{ api_base_url }}";
+</script>
 {% block script_limpiar %} <script src="{% static 'js/limpiar.js' %}"></script>{% endblock script_limpiar %}
 {% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
-
+{% block script_dpt %} <script src="{% static 'js/dpt.js' %}"></script> {% endblock script_dpt %}
 <div class="container">
     <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
     <form action="{% url 'workers:buscar_usuarios_mantenedor_works' %}" method="POST" class="mt-4">
@@ -33,6 +35,20 @@
             </div>
         </div>
         
+        <div class="row">
+            <div class="col-md-4">
+                <label for="departamentoDropdown">Departamento:</label>
+                <select id="departamentoDropdown" name="departamento" class="form-control">
+                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                </select>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        cargarDepartamentos('{{ departamentoId }}');
+                    });
+                </script>                
+                
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4">
                 <label for="firstName">Nombre:</label>

@@ -1,6 +1,6 @@
 function habilitarCampos() {
     let baseDatos = document.getElementById('base_datos').value;
-    let campos = document.querySelectorAll('#personNumber, #firstName, #lastName');
+    let campos = document.querySelectorAll('#personNumber, #firstName, #lastName, #departamentoDropdown');
     let mensaje = document.getElementById('mensaje');
     
     campos.forEach(campo => {
@@ -18,6 +18,7 @@ function habilitarCampos() {
         }, 5000);
     } else {
         mensaje.style.display = 'none';
+        cargarDepartamentos();
     }
 }
 

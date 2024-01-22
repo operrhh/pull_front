@@ -8,5 +8,7 @@ function limpiarFormulario() {
 
   document.getElementById('base_datos').value = '';
 
+  document.getElementById('departamentoDropdown').value = '';
+
   document.getElementById('grillaUsuarios').innerHTML = '';
 }
