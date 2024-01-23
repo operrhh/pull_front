@@ -1,12 +1,14 @@
 /* Mensajes */
 
 .background-hcm {
-        background-color: rgba(86, 219, 121, 0.8);
-    }
+  background-color: rgba(86, 219, 121, 0.8);
+}
+
 
 .background-peoplesoft {
-        background-color: rgba(86, 219, 121, 0.8);
-    }
+  background-color: rgba(86, 219, 121, 0.8);
+}
+
 
 
 .bi-check2-circle {
@@ -19,9 +21,8 @@
   padding: 5px;
   display: inline-block;
 }
-.discrepancy {
-  color: red;
-}
+
+
 /* Botones */
 #buscar {
   background-color: green;

@@ -115,6 +115,8 @@ def detalles_usuario(request, base_datos, user_id):
     
     diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
     print("Diferencias pasadas a la plantilla:", diferencias)
+    print("Detalles hcm:",detalles_hcm)
+    print("Detalles PS:",detalles_peoplesoft)
     # Pasa los detalles a la plantilla
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
         'user': user,
@@ -140,6 +142,7 @@ def comparar_datos(detalles_hcm, detalles_peoplesoft):
         'system_person_type': 'per_org',
         'effective_start_date': 'hire_dt',
         'business_unit_name': 'business_unit',
+        'business_unit_name': 'business_unit_descr',
         'ccu_codigo_centro_costo': 'deptid',
         'department_name': 'dept_descr',
         'job_code': 'jobcode',
@@ -150,9 +153,13 @@ def comparar_datos(detalles_hcm, detalles_peoplesoft):
     }
 
     for campo_hcm, campo_ps in mapeo_campos.items():
-        if detalles_hcm.get(campo_hcm, '') != detalles_peoplesoft.get(campo_ps, ''):
-            diferencias[campo_ps] = True
+        valor_hcm = detalles_hcm.get(campo_hcm, '')
+        valor_ps = detalles_peoplesoft.get(campo_ps) if detalles_peoplesoft else None
 
-    # print("Diferencias encontradas:", diferencias)  # Añade esta línea
+        # Verificar si valor_hcm y valor_ps son distintos de None antes de comparar
+        if valor_hcm is not None and valor_ps is not None and valor_hcm != valor_ps:
+            diferencias[campo_hcm] = True
+        else:
+            diferencias[campo_hcm] = False
+        
     return diferencias
-
