@@ -60,7 +60,7 @@ class WorkerServiceHcm:
             'email_address': emails.get('email_address', ''),
             'telefono': telefonos.get('phone_number', '')
         }
-        print("datos", datos_procesados)
+        
         return datos_procesados
 
     def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):

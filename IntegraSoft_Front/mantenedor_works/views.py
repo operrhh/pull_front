@@ -114,9 +114,6 @@ def detalles_usuario(request, base_datos, user_id):
         return render(request, 'error.html', {'mensaje': mensaje_error})
     
     diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
-    print("Diferencias pasadas a la plantilla:", diferencias)
-    print("Detalles hcm:",detalles_hcm)
-    print("Detalles PS:",detalles_peoplesoft)
     # Pasa los detalles a la plantilla
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
         'user': user,
