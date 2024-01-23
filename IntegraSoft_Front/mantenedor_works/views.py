@@ -45,27 +45,32 @@ def buscar_usuarios(request):
         firstName = request.POST.get('firstName', '')
         lastName = request.POST.get('lastName', '')
         personNumber = request.POST.get('personNumber', '')
-        departamentoId = request.POST.get('departamento', '')  # Captura el dept_id seleccionado
+        departamentoId = request.POST.get('departamento', '')
         base_datos = request.POST.get('base_datos', '')
 
-        # Verifica si todos los campos están vacíos
-        if not (firstName or lastName or personNumber or departamentoId):
+        # Verifica si se ha seleccionado una base de datos
+        if not base_datos:
+            error_message = 'Debe seleccionar una base de datos.'
+
+        # Verifica si todos los campos de búsqueda están vacíos y si se ha seleccionado una base de datos
+        elif not (firstName or lastName or personNumber or departamentoId):
             error_message = 'Debe llenar al menos un campo para la búsqueda.'
 
-        parametros = {'firstName': firstName, 'lastName': lastName, 'personNumber': personNumber}
-        if departamentoId:
-            parametros['department'] = departamentoId
+        # Si no hay errores, procede con la búsqueda
+        if not error_message:
+            parametros = {'firstName': firstName, 'lastName': lastName, 'personNumber': personNumber}
+            if departamentoId:
+                parametros['department'] = departamentoId
 
-        try:
-            if not error_message:  # Continúa solo si no hay mensaje de error
+            try:
                 worker_service = get_worker_service(base_datos, request)
                 if base_datos == 'HCM':
                     resultados_hcm = worker_service.buscar_usuarios_por_nombre(**parametros)
                 elif base_datos == 'PeopleSoft':
                     resultados_peoplesoft = worker_service.buscar_usuarios_por_nombre(**parametros)
-        except ValueError as e:
-            logger.error(f"Error al buscar usuarios: {e}")
-            error_message = "Ocurrió un error al buscar usuarios."
+            except ValueError as e:
+                logger.error(f"Error al buscar usuarios: {e}")
+                error_message = "Ocurrió un error al buscar usuarios."
 
     return render(request, 'mantenedor_works/buscar_usuarios.html', {
         'path': request.path,
@@ -81,7 +86,6 @@ def buscar_usuarios(request):
     })
 
 
-
 # views.py
 @token_auth
 def detalles_usuario(request, base_datos, user_id):
@@ -94,14 +98,14 @@ def detalles_usuario(request, base_datos, user_id):
     service_hcm = WorkerServiceHcm(request)
     service_peoplesoft = WorkerServicePeopleSoft(request)
 
-    # Verifica qué base de datos se está utilizando y obtén los detalles del usuario
+    # Realiza la consulta principal y la consulta adicional a la otra base de datos
     if base_datos == 'HCM':
         detalles_hcm = service_hcm.get_worker(user_id)
-        # Consulta adicional a PeopleSoft
-        detalles_peoplesoft = service_peoplesoft.get_worker(user_id)
+        # Consulta adicional a PeopleSoft para obtener datos complementarios
+        detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
     elif base_datos == 'PeopleSoft':
-        detalles_peoplesoft = service_peoplesoft.get_worker(user_id)
-        # Consulta adicional a HCM
+        detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
+        # Consulta adicional a HCM para obtener datos complementarios
         detalles_hcm = service_hcm.get_worker(user_id)
 
     # Maneja el caso en que no se encuentren los detalles
@@ -116,3 +120,28 @@ def detalles_usuario(request, base_datos, user_id):
         'detalles_hcm': detalles_hcm,
         'detalles_peoplesoft': detalles_peoplesoft
     })
+
+# views.py
+
+# @token_auth
+# def render_detalles_usuario(request, base_datos, user_id):
+#     user = request.session.get('user', {})
+
+#     service_hcm = WorkerServiceHcm(request)
+#     service_peoplesoft = WorkerServicePeopleSoft(request)
+
+#     detalles_hcm = service_hcm.get_worker(user_id) if base_datos == 'HCM' else None
+#     detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id) if base_datos == 'PeopleSoft' else None
+
+#     context = {
+#         'user': user,
+#         'base_datos': base_datos,
+#         'detalles_hcm': detalles_hcm,
+#         'detalles_peoplesoft': detalles_peoplesoft
+#     }
+#     print("Base de datos:", base_datos)
+#     print("ID del Usuario:", user_id)
+#     print("Detalles HCM:", detalles_hcm)
+#     print("Detalles PeopleSoft:", detalles_peoplesoft)
+
+#     return render(request, 'mantenedor_works/detalles_usuario.html', context)

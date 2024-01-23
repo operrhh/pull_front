@@ -26,54 +26,42 @@ class WorkerServiceHcm:
         except Exception as e:
             print(f"Error al procesar la respuesta de la API: {e}")
             return None
+        
     def _procesar_usuario_hcm(self, worker_data):
-    # Asume que worker_data es un diccionario directamente desde el JSON
-        nombres = worker_data.get('names', [])
-        emails = worker_data.get('emails', [])
-        telefonos = worker_data.get('phones', [])
-        direcciones = worker_data.get('addresses', [])
-        relaciones_laborales = worker_data.get('work_relationships', [])
+        # Extracción de datos de las diferentes secciones
+        nombres = worker_data.get('names', [])[0] if worker_data.get('names') else {}
+        emails = worker_data.get('emails', [])[0] if worker_data.get('emails') else {}
+        telefonos = worker_data.get('phones', [])[0] if worker_data.get('phones') else {}
+        direcciones = worker_data.get('addresses', [])[0] if worker_data.get('addresses') else {}
+        relaciones_laborales = worker_data.get('work_relationships', [])[0] if worker_data.get('work_relationships') else {}
+        assignment = relaciones_laborales.get('assignment', {}) if relaciones_laborales else {}
 
-        nombre_completo = nombres[0].get('display_name', '') if nombres else ''
-        email = emails[0].get('email_address', '') if emails else ''
-        telefono = telefonos[0].get('phone_number', '') if telefonos else ''
-        direccion = direcciones[0].get('addressLine1', '') if direcciones else ''
-        department_name = (relaciones_laborales[0].get('assignment', {}).get('department_name', '') 
-                            if relaciones_laborales else '')
-
-        return {
-            'nombre_completo': nombre_completo,
-            'personNumber': worker_data.get('person_number', ''),
-            'email': email,
-            'telefono': telefono,
-            'direccion': direccion,
-            'department_name': department_name
+        # Construcción del diccionario con los datos extraídos
+        datos_procesados = {
+            'person_number': worker_data.get('person_number', ''),
+            'date_of_birth': worker_data.get('date_of_birth', ''),
+            'display_name': nombres.get('display_name', ''),
+            'last_name': nombres.get('last_name', ''),
+            'first_name': nombres.get('first_name', ''),
+            'middle_names': nombres.get('middle_names', ''),
+            'country': worker_data.get('country_of_birth', ''),
+            'addressLine1': direcciones.get('addressLine1', ''),
+            'addressLine2': direcciones.get('addressLine2', ''),
+            'town_or_city': direcciones.get('town_or_city', ''),
+            'system_person_type': assignment.get('system_person_type', ''),
+            'effective_start_date': assignment.get('effective_start_date', ''),
+            'business_unit_name': assignment.get('business_unit_name', ''),
+            'ccu_codigo_centro_costo': assignment.get('ccu_codigo_centro_costo', ''),
+            'department_name': assignment.get('department_name', ''),
+            'job_code': assignment.get('job_code', ''),
+            'standard_working_hours': assignment.get('standard_working_hours', ''),
+            'locationCode': assignment.get('location_code', ''),
+            'managerAssignmentNumber': assignment.get('manager', ''),
+            'email_address': emails.get('email_address', ''),
+            'telefono': telefonos.get('phone_number', '')
         }
-
-
-    def _procesar_usuario_hcm(self, worker_data):
-        # Procesamiento similar a PeopleSoft
-        names = worker_data.get('names', [])
-        emails = worker_data.get('emails', [])
-        phones = worker_data.get('phones', [])
-        addresses = worker_data.get('addresses', [])
-        work_relationships = worker_data.get('work_relationships', [])
-
-        nombre_completo = names[0].get('display_name', '') if names else ''
-        email = emails[0].get('email_address', '') if emails else ''
-        telefono = phones[0].get('phone_number', '') if phones else ''
-        direccion = addresses[0].get('addressLine1', '') if addresses else ''
-        department_name = (work_relationships[0].get('assignment', {}).get('department_name', '') 
-                            if work_relationships else '')
-
-        return {
-            'nombre_completo': nombre_completo,
-            'personNumber': worker_data.get('person_number', ''),
-            'email': email,
-            'telefono': telefono,
-            'direccion': direccion,
-            'department_name': department_name
-        }
+        print("datos", datos_procesados)
+        return datos_procesados
 
     def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):
         params = {}

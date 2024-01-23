@@ -23,17 +23,20 @@
         <tbody>
           {% for usuario in usuarios %}
           <tr>
-            <td>{{ usuario.personNumber }}</td>
-            <td>{{ usuario.nombre_completo }}</td>
-            <td>{{ usuario.department_name }}</td>
-            <td>
-              <!-- Asegúrate de que 'base_datos' y 'usuario.personNumber' sean proporcionados correctamente por la vista -->
-              <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
-            </td>
+              <td>{{ usuario.personNumber }}</td>
+              <td>{{ usuario.nombre_completo }}</td>
+              <td>{{ usuario.department_name }}</td>
+              <td>
+                  {% if usuario.personNumber %}
+                      <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
+                  {% else %}
+                      <span>No disponible</span>
+                  {% endif %}
+              </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="4">No se encontraron resultados.</td>
+              <td colspan="4">No se encontraron resultados.</td>
           </tr>
           {% endfor %}
         </tbody>
