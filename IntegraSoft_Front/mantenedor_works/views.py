@@ -107,41 +107,52 @@ def detalles_usuario(request, base_datos, user_id):
         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
         # Consulta adicional a HCM para obtener datos complementarios
         detalles_hcm = service_hcm.get_worker(user_id)
-
+    
     # Maneja el caso en que no se encuentren los detalles
     if detalles_hcm is None and detalles_peoplesoft is None:
         mensaje_error = 'Usuario no encontrado en ninguna de las bases de datos'
         return render(request, 'error.html', {'mensaje': mensaje_error})
-
+    
+    diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
+    print("Diferencias pasadas a la plantilla:", diferencias)
     # Pasa los detalles a la plantilla
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
         'user': user,
         'base_datos': base_datos,
         'detalles_hcm': detalles_hcm,
-        'detalles_peoplesoft': detalles_peoplesoft
+        'detalles_peoplesoft': detalles_peoplesoft,
+        'diferencias': diferencias
     })
 
-# views.py
+def comparar_datos(detalles_hcm, detalles_peoplesoft):
+    diferencias = {}
+    mapeo_campos = {
+        'person_number': 'emplid',
+        'date_of_birth': 'birthdate',
+        'display_name': 'name',
+        'last_name': 'last_name',
+        'first_name': 'first_name',
+        'middle_names': 'middle_name',
+        'country': 'country',
+        'addressLine1': 'address1',
+        'addressLine2': 'address2',
+        'town_or_city': 'city',
+        'system_person_type': 'per_org',
+        'effective_start_date': 'hire_dt',
+        'business_unit_name': 'business_unit',
+        'ccu_codigo_centro_costo': 'deptid',
+        'department_name': 'dept_descr',
+        'job_code': 'jobcode',
+        'standard_working_hours': 'std_hours',
+        'locationCode': 'location',
+        'managerAssignmentNumber': 'supervisor_id',
+        'email_address': 'email'
+    }
 
-# @token_auth
-# def render_detalles_usuario(request, base_datos, user_id):
-#     user = request.session.get('user', {})
+    for campo_hcm, campo_ps in mapeo_campos.items():
+        if detalles_hcm.get(campo_hcm, '') != detalles_peoplesoft.get(campo_ps, ''):
+            diferencias[campo_ps] = True
 
-#     service_hcm = WorkerServiceHcm(request)
-#     service_peoplesoft = WorkerServicePeopleSoft(request)
+    # print("Diferencias encontradas:", diferencias)  # Añade esta línea
+    return diferencias
 
-#     detalles_hcm = service_hcm.get_worker(user_id) if base_datos == 'HCM' else None
-#     detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id) if base_datos == 'PeopleSoft' else None
-
-#     context = {
-#         'user': user,
-#         'base_datos': base_datos,
-#         'detalles_hcm': detalles_hcm,
-#         'detalles_peoplesoft': detalles_peoplesoft
-#     }
-#     print("Base de datos:", base_datos)
-#     print("ID del Usuario:", user_id)
-#     print("Detalles HCM:", detalles_hcm)
-#     print("Detalles PeopleSoft:", detalles_peoplesoft)
-
-#     return render(request, 'mantenedor_works/detalles_usuario.html', context)
