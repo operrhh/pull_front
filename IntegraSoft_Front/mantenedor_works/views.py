@@ -17,9 +17,11 @@ def index(request):
     return render(request, 'mantenedor_works/index_usuarios.html',{'user': user, 'api_base_url': settings.API_BASE_URL})
 def proxy_to_departments(request):
     base_datos = request.GET.get('base_datos', 'hcm')
+    search = request.GET.get('name', '')  # Cambiado a 'name' para coincidir con el parámetro de la API
+
     service = DepartmentService(request)
-    departments = service.get_departments(base_datos)
-    return JsonResponse({'departments': departments})
+    response = service.get_departments(base_datos, search_query=search)
+    return JsonResponse(response)
 
 def get_worker_service(base_datos, request):
     if base_datos == 'HCM':
