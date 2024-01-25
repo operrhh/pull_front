@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 def index(request):
     user = request.session['user']
     return render(request, 'mantenedor_works/index_usuarios.html',{'user': user, 'api_base_url': settings.API_BASE_URL})
-
 def proxy_to_departments(request):
     base_datos = request.GET.get('base_datos', 'hcm')
     service = DepartmentService(request)

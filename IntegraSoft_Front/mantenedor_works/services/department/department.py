@@ -13,3 +13,17 @@ class DepartmentService:
             return response['items']
         else:
             return []
+        
+    def get_more_departments(self, base_datos, page=1, search_query=''):
+        page_size = 50  # Define el número de resultados por página
+        offset = (page - 1) * page_size
+        api_url = f"{API_BASE_URL}/department/{base_datos.lower()}/?offset={offset}&limit={page_size}"
+
+        if search_query:
+            api_url += f"&search={search_query}"
+
+        response = self.global_service.generate_request(api_url)
+        if response:
+            return response  # Devuelve la respuesta completa, incluyendo 'items', 'next', etc.
+        else:
+            return {"items": [], "hasMore": False}

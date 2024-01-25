@@ -5,7 +5,6 @@
     var apiBaseUrl = "{{ api_base_url }}";
 </script>
 {% block script_limpiar %} <script src="{% static 'js/limpiar.js' %}"></script>{% endblock script_limpiar %}
-{% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
 {% block script_dpt %} <script src="{% static 'js/dpt.js' %}"></script> {% endblock script_dpt %}
 <div class="container">
     <h1 class="text-center mt-4">Formulario de Búsqueda</h1>
@@ -35,12 +34,21 @@
             </div>
         </div>
         
-        <div class="row">
+         <div class="row">
             <div class="col-md-4">
                 <label for="departamentoDropdown">Departamento:</label>
                 <select id="departamentoDropdown" name="departamento" class="form-control">
                     <!-- Las opciones se llenarán dinámicamente con JavaScript -->
-                </select>
+                    <div class="custom-sandbox">
+                        <button id="sandbox-button">Botón Personalizado</button>
+                        <div class="sandbox-content">
+                          <!-- Contenido de tu sandbox -->
+                        </div>
+                      </div>
+                </select> 
+                <!-- Estructura HTML para el select personalizado -->
+                <button id="cargarMasBtn" class="btn btn-secondary">Cargar más...</button>
+
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         cargarDepartamentos('{{ departamentoId }}');
@@ -85,3 +93,4 @@
 {% block script_formulario %} <script src="{% static 'js/formulario.js' %}"></script>{% endblock script_formulario %}
 
 {% endblock content %}
+
