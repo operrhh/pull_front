@@ -78,14 +78,23 @@ class WorkerServicePeopleSoft:
             print(f"Error al decodificar JSON: {e}")
             return None
     def _procesar_detalle_usuario_peoplesoft(self, user):
+        first_name = user.get('first_name', '').strip()
+        middle_name = user.get('middle_name', '').strip()
+        last_name = user.get('last_name', '').strip()
+        second_last_name = user.get('second_last_name', '').strip()
+
+    # Concatenar los nombres con espacios entre ellos solo si el nombre respectivo no está vacío
+        nombre_completo = ' '.join(filter(None, [first_name, middle_name, last_name, second_last_name]))
     # Extraer todos los campos necesarios del usuario para los detalles completos
         return {
             'emplid': user.get('emplid', ''),
             'birthdate': user.get('birthdate', ''),
+            'nombre': nombre_completo,
             'name': user.get('name', ''),
             'last_name': user.get('last_name', ''),
             'first_name': user.get('first_name', ''),
             'middle_name': user.get('middle_name', ''),
+            'second_last_name': user.get('second_last_name', ''),
             'country': user.get('country', ''),
             'address1': user.get('address1', ''),
             'address2': user.get('address2', ''),

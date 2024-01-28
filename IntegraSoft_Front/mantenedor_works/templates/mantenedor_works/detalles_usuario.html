@@ -29,15 +29,8 @@
         <p>No se encontraron datos para este usuario.</p>
     {% endif %}
     <div class="row">
-      <!-- Sección para los datos de HCM -->
-      <div class="col-md-6 {% if base_datos == 'HCM' %}background-hcm{% endif %}">
-        {% block hcm_block %} {% endblock hcm_block %}
-      </div>
 
-      <!-- Sección para los datos de PeopleSoft -->
-      <div class="col-md-6 {% if base_datos == 'PeopleSoft' %}background-peoplesoft{% endif %}">
-        {% block peoplesoft_block %} {% endblock peoplesoft_block %}
-      </div>
+      {% block content_comparador %} {% endblock content_comparador %}
     </div>
   </div>
 </div>

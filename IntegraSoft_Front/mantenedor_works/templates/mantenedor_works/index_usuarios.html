@@ -5,7 +5,7 @@
     var apiBaseUrl = "{{ api_base_url }}";
 </script>
 {% block jquery %}<script src="{% static 'js/jquery.min.js' %}"></script>{% endblock jquery %}
-{% block jquery_css %}<script src="{% static 'select2/css/select2.min.css' %}"></script>{% endblock jquery_css %}
+{% block css_select %}<link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}">{% endblock css_select %}
 {% block jquery_js %}<script src="{% static 'select2/js/select2.full.min.js' %}"></script>{% endblock jquery_js %}
 {% block script_limpiar %} <script src="{% static 'js/limpiar.js' %}"></script>{% endblock script_limpiar %}
 {% block script_dpt %} <script src="{% static 'js/dpt.js' %}"></script> {% endblock script_dpt %}
@@ -27,6 +27,21 @@
                     Para iniciar el proceso de búsqueda primero debe seleccionar una base de datos
                 </span>
             </div>
+                <!-- Departamento -->
+            <div class="col-md-6">
+                    <label for="departamentoDropdown">Departamento:</label>
+                    <select id="departamentoDropdown" name="departamento" class="form-control">
+                        <option value="">Seleccione un departamento</option>
+                        {% for departamento in departamentos %}
+                        <option value="{{ departamento.dept_id }}" {% if departamento.dept_id == departamentoId %}selected{% endif %}>
+                            {{ departamento.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    
+            </div>
+                
         </div>
 
         <!-- Campos de búsqueda -->
@@ -37,20 +52,6 @@
             </div>
         </div>
         
-         <div class="row">
-            <div class="col-md-4">
-                <label for="departamentoDropdown">Departamento:</label>
-                <select id="departamentoDropdown" name="departamento" class="form-control">
-                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
-                </select> 
-                {% comment %} <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        cargarDepartamentos('{{ departamentoId }}');
-                    });
-                </script>                
-                 {% endcomment %}
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-4">
                 <label for="firstName">Nombre:</label>
@@ -63,6 +64,7 @@
         </div>
         
 
+
         {% if error_message %}
         <div class="alert alert-danger mt-3">
             {{ error_message }}
@@ -71,7 +73,7 @@
     
         <div class="d-flex align-items-center mt-3">
             <button id="buscar" type="submit" class="btn btn-primary">Buscar</button>
-            <button id="limpiar" class="btn btn-danger" onclick="event.preventDefault(); limpiarFormulario();">Limpiar</button>
+            <button id="limpiar" type="button" class="btn btn-danger" onclick="event.preventDefault(); limpiarFormulario();">Limpiar</button>
         </div>
     </form>
     <div id="grillaUsuarios">
@@ -84,7 +86,5 @@
 {% block script_sistema %} <script src="{% static 'js/boton_sistema.js' %}"></script>{% endblock script_sistema %}
 {% block css %} <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">{% endblock css %}
 {% block script_habilitar%} <script src="{% static 'js/habilitar.js' %}"></script>{% endblock script_habilitar %}
-{% block script_formulario %} <script src="{% static 'js/formulario.js' %}"></script>{% endblock script_formulario %}
-
 {% endblock content %}
 

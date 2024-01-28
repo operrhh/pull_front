@@ -28,7 +28,7 @@ def login_view(request):
             return redirect('accounts:index_home')
         else:
             # Si el login falla, muestra un mensaje de error
-            messages.error(request, 'Login fallido. Por favor, intenta de nuevo.')
+            messages.error(request, 'Proporcionó credenciales incorrectas, intentelo de nuevo por favor.')
     # Renderiza la plantilla de login si no es una solicitud POST o si el login falla
     return render(request, 'templates_generales/login.html')
 

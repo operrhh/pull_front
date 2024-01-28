@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 def index(request):
     user = request.session['user']
     return render(request, 'mantenedor_works/index_usuarios.html',{'user': user, 'api_base_url': settings.API_BASE_URL})
+
+@token_auth
 def proxy_to_departments(request):
     base_datos = request.GET.get('base_datos', 'hcm')
     search = request.GET.get('name', '')  # Cambiado a 'name' para coincidir con el parámetro de la API
@@ -33,14 +35,15 @@ def get_worker_service(base_datos, request):
     
 @token_auth
 def buscar_usuarios(request):
-    global resultados_hcm, resultados_peoplesoft
     firstName = ""
     lastName = ""  
     personNumber = ""  
     departamentoId = ""
     base_datos = ""  
     user = request.session.get('user', {})
-    error_message = None  # Inicializa una variable para el mensaje de error
+    error_message = None  
+    resultados_hcm = []  # Inicializa la lista vacía aquí
+    resultados_peoplesoft = []  # Inicializa la lista vacía aquí
 
     if request.method == 'POST':
         firstName = request.POST.get('firstName', '')
@@ -49,20 +52,14 @@ def buscar_usuarios(request):
         departamentoId = request.POST.get('departamento', '')
         base_datos = request.POST.get('base_datos', '')
 
-        # Verifica si se ha seleccionado una base de datos
         if not base_datos:
             error_message = 'Debe seleccionar una base de datos.'
-
-        # Verifica si todos los campos de búsqueda están vacíos y si se ha seleccionado una base de datos
         elif not (firstName or lastName or personNumber or departamentoId):
             error_message = 'Debe llenar al menos un campo para la búsqueda.'
-
-        # Si no hay errores, procede con la búsqueda
-        if not error_message:
+        else:
             parametros = {'firstName': firstName, 'lastName': lastName, 'personNumber': personNumber}
             if departamentoId:
                 parametros['department'] = departamentoId
-
             try:
                 worker_service = get_worker_service(base_datos, request)
                 if base_datos == 'HCM':
@@ -72,6 +69,7 @@ def buscar_usuarios(request):
             except ValueError as e:
                 logger.error(f"Error al buscar usuarios: {e}")
                 error_message = "Ocurrió un error al buscar usuarios."
+    # De lo contrario, si no es un método POST (por ejemplo, GET), las listas permanecen vacías.
 
     return render(request, 'mantenedor_works/buscar_usuarios.html', {
         'path': request.path,
@@ -83,46 +81,45 @@ def buscar_usuarios(request):
         'base_datos': base_datos,
         'api_base_url': settings.API_BASE_URL,
         'user': user,
-        'error_message': error_message  # Pasa el mensaje de error a la plantilla
+        'error_message': error_message
     })
-
 
 # views.py
 @token_auth
 def detalles_usuario(request, base_datos, user_id):
-    user = request.session['user']
-
+    user = request.session.get('user', {})
     detalles_hcm = None
     detalles_peoplesoft = None
+    diferencias = {}  # Asegúrate de inicializar la variable diferencias
 
-    # Inicializa los servicios
     service_hcm = WorkerServiceHcm(request)
     service_peoplesoft = WorkerServicePeopleSoft(request)
 
-    # Realiza la consulta principal y la consulta adicional a la otra base de datos
     if base_datos == 'HCM':
         detalles_hcm = service_hcm.get_worker(user_id)
-        # Consulta adicional a PeopleSoft para obtener datos complementarios
         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
     elif base_datos == 'PeopleSoft':
         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
-        # Consulta adicional a HCM para obtener datos complementarios
         detalles_hcm = service_hcm.get_worker(user_id)
-    
-    # Maneja el caso en que no se encuentren los detalles
-    if detalles_hcm is None and detalles_peoplesoft is None:
-        mensaje_error = 'Usuario no encontrado en ninguna de las bases de datos'
-        return render(request, 'error.html', {'mensaje': mensaje_error})
-    
-    diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
-    # Pasa los detalles a la plantilla
-    return render(request, 'mantenedor_works/hcm_peoplesoft.html', {
+
+    if detalles_hcm or detalles_peoplesoft:
+        diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
+
+    # Agrega un mensaje si no se encuentran detalles
+    mensaje_hcm = 'No se encontraron datos en HCM para este usuario.' if not detalles_hcm else ''
+    mensaje_peoplesoft = 'No se encontraron datos en PeopleSoft para este usuario.' if not detalles_peoplesoft else ''
+
+    context = {
         'user': user,
         'base_datos': base_datos,
         'detalles_hcm': detalles_hcm,
         'detalles_peoplesoft': detalles_peoplesoft,
-        'diferencias': diferencias
-    })
+        'diferencias': diferencias,
+        'mensaje_hcm': mensaje_hcm,
+        'mensaje_peoplesoft': mensaje_peoplesoft
+    }
+
+    return render(request, 'mantenedor_works/hcm_peoplesoft.html', context)
 
 def comparar_datos(detalles_hcm, detalles_peoplesoft):
     diferencias = {}
@@ -130,6 +127,7 @@ def comparar_datos(detalles_hcm, detalles_peoplesoft):
         'person_number': 'emplid',
         'date_of_birth': 'birthdate',
         'display_name': 'name',
+        'nombre': 'nombre',
         'last_name': 'last_name',
         'first_name': 'first_name',
         'middle_names': 'middle_name',

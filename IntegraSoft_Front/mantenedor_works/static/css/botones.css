@@ -43,5 +43,24 @@
   background-color: green;
 }
 
-/*Nuevas opciones/*
-/* Estilos CSS */
+/*Nuevas opciones department/*
+
+/* Ajustar el ancho del select2 */
+.select2-container {
+  width: 50% !important; /* Ajusta esto al ancho que prefieras */
+}
+
+/* Alinear el contenedor de select2 a la derecha */
+.select2-container {
+  margin-left: auto;
+}
+
+/* Para mantener la alineación del texto a la izquierda dentro del select */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  text-align: left;
+}
+
+/* Ajustar la alineación del texto de la opción seleccionada */
+.select2-selection__rendered {
+  text-align: left !important;
+}

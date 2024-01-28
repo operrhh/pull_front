@@ -27,7 +27,7 @@
               <td>{{ usuario.nombre_completo }}</td>
               <td>{{ usuario.department_name }}</td>
               <td>
-                  {% if usuario.personNumber %}
+                  {% if base_datos and usuario.personNumber %}
                       <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
                   {% else %}
                       <span>No disponible</span>

@@ -11,7 +11,31 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 </head>
+
 <body>
+    <style>
+        .message-success {
+          color: #2e8b57; /* o cualquier código de color verde claro que prefieras */
+        }
+      
+        .btn-conectar {
+            background-color: #32CD32; /* Color verde claro */
+            border-color: #32CD32; /* Color verde claro */
+            transition: background-color 0.3s, border-color 0.3s; /* Para suavizar la transición */
+          }
+        
+          /* Cambia los estilos cuando el ratón pasa por encima del botón */
+        .btn-conectar:hover {
+            background-color: #2e8b57; /* Un verde un poco más oscuro para el efecto hover */
+            border-color: #2e8b57; /* Un verde un poco más oscuro para el borde en hover */
+          }
+      
+        /* Esta clase será añadida por JavaScript para ocultar el mensaje */
+        .hidden {
+          display: none;
+        }
+      </style>
+      
     <div class="container-fluid min-vh-100 d-flex align-items-center px-0">
         <div class="login-card-container">
             <!-- Área de la imagen -->
@@ -40,6 +64,17 @@
                                 parteDelDia.innerHTML = "buenas noches";
                             }
                         };
+
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Busca el mensaje de éxito y verifica si existe
+                            var successMessage = document.querySelector('.message-success');
+                            if (successMessage) {
+                              // Establece un temporizador para ocultar el mensaje después de 3 segundos (3000 milisegundos)
+                              setTimeout(function () {
+                                successMessage.classList.add('hidden');
+                              }, 3000);
+                            }
+                          });
                         </script>
                         
                             
@@ -55,9 +90,17 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                        
-                        <button type="submit" class="btn btn-primary">Conectar</button>
+                        <button type="submit" class="btn btn-conectar">Conectar</button>
+
                     </div>
-                    
+                    {% if messages %}
+                    <div class="message-container">
+                      {% for message in messages %}
+                        <div class="{{ message.tags }} message-success">{{ message }}</div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  
                 </form>
             </div>
         </div>
