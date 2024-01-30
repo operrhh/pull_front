@@ -22,12 +22,45 @@
   display: inline-block;
 }
 
+.btn-detalle {
+  background-color: #32CD32; /* Color verde claro */
+  border-color: #32CD32; /* Color verde claro */
+  transition: background-color 0.3s, border-color 0.3s; /* Para suavizar la transición */
+}
+
+.btn-detalle:hover {
+  background-color: #2e8b57; /* Un verde un poco más oscuro para el efecto hover */
+  border-color: #2e8b57; /* Un verde un poco más oscuro para el borde en hover */
+}
+
+.nombre-completo-contenedor {
+  background-color: #f5f5f5; /* Fondo del contenedor */
+  border: 1px solid #ddd; /* Borde del contenedor */
+  padding: 10px; /* Espaciado interno del contenedor */
+  margin-bottom: 20px; /* Margen debajo del contenedor */
+}
+
+.nombre-completo-panel {
+  margin-bottom: 0; /* Eliminar el margen inferior del título */
+}
+
+.numero-persona {
+  font-weight: normal;
+  color: #555; /* Color del texto para el número de persona */
+}
 
 /* Botones */
 #buscar {
-  background-color: green;
-  margin-right: 10px;
+  background-color: #32CD32; /* Color verde claro */
+  border-color: #32CD32; /* Color verde claro */
+  transition: background-color 0.3s, border-color 0.3s; /* Para suavizar la transición */
 }
+
+#buscar:hover {
+  background-color: #2e8b57; /* Un verde un poco más oscuro para el efecto hover */
+  border-color: #2e8b57; /* Un verde un poco más oscuro para el borde en hover */
+}
+
 
 
 #limpiar {
@@ -39,8 +72,22 @@
 }
 
 #regresar_formulario {
-  text-align: right;
-  background-color: green;
+  background-color: #4CAF50; /* Color verde */
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+#regresar_formulario:hover {
+  background-color: #45a049; /* Un tono ligeramente más oscuro de verde al pasar el ratón por encima */
 }
 
 /*Nuevas opciones department/*
@@ -48,12 +95,13 @@
 /* Ajustar el ancho del select2 */
 .select2-container {
   width: 50% !important; /* Ajusta esto al ancho que prefieras */
+  margin-left: auto;
+
 }
 
 /* Alinear el contenedor de select2 a la derecha */
-.select2-container {
-  margin-left: auto;
-}
+
+
 
 /* Para mantener la alineación del texto a la izquierda dentro del select */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -63,4 +111,25 @@
 /* Ajustar la alineación del texto de la opción seleccionada */
 .select2-selection__rendered {
   text-align: left !important;
+}
+
+/* Grilla */
+.card {
+  background-color: #fff; /* Color de fondo de la card */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  margin-bottom: 20px; /* Espacio debajo de la card */
+  overflow: hidden; /* Evitar que el contenido sobresalga */
+}
+
+.card-header {
+  background-color: #f8f9fa; /* Color de fondo del encabezado */
+  padding: 16px 24px; /* Espaciado interno del encabezado */
+  border-bottom: 1px solid #e1e4e8; /* Borde inferior del encabezado */
+  font-size: 20px; /* Tamaño de la fuente del encabezado */
+  font-weight: 500; /* Peso de la fuente del encabezado */
+}
+
+.card-body {
+  padding: 16px; /* Espaciado interno del cuerpo de la card */
 }

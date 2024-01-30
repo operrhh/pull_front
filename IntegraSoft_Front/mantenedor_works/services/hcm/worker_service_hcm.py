@@ -68,34 +68,45 @@ class WorkerServiceHcm:
         }
         
         return datos_procesados
-
-    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):
-        params = {}
-        if firstName:
-            params['firstName'] = firstName
-        if lastName:
-            params['lastName'] = lastName
-        if personNumber:    
-            params['personNumber'] = personNumber
-        if department:
-            params['department'] = department
+    
+    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None, offset=None):
+        params = {
+            'firstName': firstName,
+            'lastName': lastName,
+            'personNumber': personNumber,
+            'department': department,
+            'offset': offset
+        }
+        
+        # Filtramos los parámetros para eliminar aquellos que sean None o estén vacíos
+        params = {k: v for k, v in params.items() if v}
 
         response = self.global_service.generate_request(self.url, params=params)
+        
+        # Inicializamos usuarios como una lista vacía
         usuarios = []
+        
         if response and 'items' in response:
+            # Procesamos los usuarios normalmente
             for user in response['items']:
-                usuario = {
+                usuarios.append({
                     'nombre_completo': user.get('display_name', ''),
                     'personNumber': user.get('person_number', ''),
                     'department_name': user.get('department_name', '')
-                    # Aquí puedes agregar más campos si la API los proporciona
-                }
-                usuarios.append(usuario)
+                })
+            
+            # Verificamos si hay más páginas y la URL para la próxima carga
+            if response.get('hasMore', False):
+                usuarios.append({
+                    'has_more': True,
+                    'next_url': response.get('next')
+                })   
         return usuarios
 
-    def _obtener_campo(self, lista, campo):
-        if lista:
-            for item in lista:
-                if campo in item:
-                    return item[campo]
-        return ''
+    def get_worker_next (self, url):
+        response = self.global_service.generate_request(url)
+        if response and 'items' in response:
+            return response
+
+
+      

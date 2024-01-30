@@ -6,9 +6,11 @@ from mantenedor_works.services.hcm.worker_service_hcm import WorkerServiceHcm
 from mantenedor_works.services.peoplesoft.worker_service_peoplesoft import WorkerServicePeopleSoft
 from mantenedor_works.services.department.department import DepartmentService
 from Decorators.auth_decorator import token_auth
-from var.global_vars import resultados_hcm, resultados_peoplesoft
+from urllib.parse import unquote
 from django.urls import reverse
 from IntegraSoft_Front import settings
+from django.http import JsonResponse
+from urllib.parse import unquote
 
 logger = logging.getLogger(__name__)
 @token_auth
@@ -33,6 +35,7 @@ def get_worker_service(base_datos, request):
     else:
         raise ValueError("Base de datos no soportada")
     
+
 @token_auth
 def buscar_usuarios(request):
     firstName = ""
@@ -42,8 +45,12 @@ def buscar_usuarios(request):
     base_datos = ""  
     user = request.session.get('user', {})
     error_message = None  
-    resultados_hcm = []  # Inicializa la lista vacía aquí
-    resultados_peoplesoft = []  # Inicializa la lista vacía aquí
+    resultados = []  # Lista para almacenar los resultados
+    has_more = False
+    next_url = None
+
+    # Obtén el offset de la URL para HCM
+    offset = request.GET.get('offset', None)
 
     if request.method == 'POST':
         firstName = request.POST.get('firstName', '')
@@ -57,23 +64,38 @@ def buscar_usuarios(request):
         elif not (firstName or lastName or personNumber or departamentoId):
             error_message = 'Debe llenar al menos un campo para la búsqueda.'
         else:
-            parametros = {'firstName': firstName, 'lastName': lastName, 'personNumber': personNumber}
-            if departamentoId:
-                parametros['department'] = departamentoId
             try:
                 worker_service = get_worker_service(base_datos, request)
                 if base_datos == 'HCM':
-                    resultados_hcm = worker_service.buscar_usuarios_por_nombre(**parametros)
+                    resultados_hcm = worker_service.buscar_usuarios_por_nombre(
+                        firstName=firstName,
+                        lastName=lastName,
+                        personNumber=personNumber,
+                        department=departamentoId,
+                        offset=offset  # Usa el offset de la URL
+                    )
+                    # Extraemos la información de paginación si está presente
+                    if resultados_hcm and isinstance(resultados_hcm[-1], dict) and 'has_more' in resultados_hcm[-1]:
+                        has_more = resultados_hcm[-1]['has_more']
+                        next_url = resultados_hcm[-1]['next_url']
+                        resultados_hcm = resultados_hcm[:-1]  # Removemos el elemento de paginación
+                    resultados = resultados_hcm
+
                 elif base_datos == 'PeopleSoft':
-                    resultados_peoplesoft = worker_service.buscar_usuarios_por_nombre(**parametros)
+                    resultados, has_more, next_url = worker_service.buscar_usuarios_por_nombre(
+                        firstName=firstName,
+                        lastName=lastName,
+                        personNumber=personNumber,
+                        department=departamentoId
+                    )
+                print("siguiente_url",next_url)
             except ValueError as e:
                 logger.error(f"Error al buscar usuarios: {e}")
                 error_message = "Ocurrió un error al buscar usuarios."
-    # De lo contrario, si no es un método POST (por ejemplo, GET), las listas permanecen vacías.
 
     return render(request, 'mantenedor_works/buscar_usuarios.html', {
         'path': request.path,
-        'usuarios': resultados_hcm if base_datos == 'HCM' else resultados_peoplesoft,
+        'usuarios': resultados,
         'firstName': firstName,
         'lastName': lastName,
         'personNumber': personNumber,
@@ -81,8 +103,11 @@ def buscar_usuarios(request):
         'base_datos': base_datos,
         'api_base_url': settings.API_BASE_URL,
         'user': user,
-        'error_message': error_message
+        'error_message': error_message,
+        'has_more': has_more,
+        'next_url': next_url
     })
+
 
 # views.py
 @token_auth
@@ -118,7 +143,8 @@ def detalles_usuario(request, base_datos, user_id):
         'mensaje_hcm': mensaje_hcm,
         'mensaje_peoplesoft': mensaje_peoplesoft
     }
-
+    
+   
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', context)
 
 def comparar_datos(detalles_hcm, detalles_peoplesoft):
@@ -159,3 +185,42 @@ def comparar_datos(detalles_hcm, detalles_peoplesoft):
             diferencias[campo_hcm] = False
         
     return diferencias
+
+
+
+
+@token_auth
+def cargar_mas_usuarios(request):
+    next_url = request.GET.get('next_url')
+    base_datos = request.GET.get('base_datos', 'HCM')  # O un valor por defecto
+
+    # Impresiones para depuración
+    print("Base de datos seleccionada:", base_datos)
+    print("URL siguiente:", next_url)
+
+    if not next_url:
+        return JsonResponse({'error': 'URL de próxima página no proporcionada'}, status=400)
+
+    next_url = unquote(next_url)
+
+    try:
+        if base_datos == 'HCM':
+            service = WorkerServiceHcm(request)
+            response_data = service.get_worker_next(next_url)
+        elif base_datos == 'PeopleSoft':
+            service = WorkerServicePeopleSoft(request)
+            response_data = service.get_worker_next_ps(next_url)
+        else:
+            return JsonResponse({'error': 'Base de datos no válida'}, status=400)
+
+        # Imprimir la respuesta para depuración
+        print("Datos de respuesta:", response_data)
+
+        if response_data:
+            return JsonResponse(response_data)
+        else:
+            return JsonResponse({'error': 'Error al obtener más usuarios'}, status=500)
+
+    except Exception as e:
+        print(f"Error en cargar_mas_usuarios: {e}")
+        return JsonResponse({'error': str(e)}, status=500)

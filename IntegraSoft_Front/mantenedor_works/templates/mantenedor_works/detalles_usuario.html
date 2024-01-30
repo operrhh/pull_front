@@ -20,19 +20,23 @@
   <h1 class="text-center mt-4">Detalles del Usuario</h1>
   <div class="mt-4">
     {% if base_datos == 'HCM' and detalles_hcm %}
-        <h2>{{ detalles_hcm.display_name }}</h2>
-        <p><strong>Número de Persona:</strong> {{ detalles_hcm.person_number }}</p>
+      <div class="nombre-completo-contenedor">
+        <h2 class="nombre-completo-panel"><strong>Usuario:</strong>{{ detalles_hcm.display_name }}</h2>
+        <p class="numero-persona"><strong>Número de Persona:</strong> {{ detalles_hcm.person_number }}</p>
+      </div>
     {% elif base_datos == 'PeopleSoft' and detalles_peoplesoft %}
-        <h2>{{ detalles_peoplesoft.name }}</h2>
-        <p><strong>ID Empleado:</strong> {{ detalles_peoplesoft.emplid }}</p>
+      <div class="nombre-completo-contenedor">
+        <h2 class="nombre-completo-panel"><strong> Usuario: </strong>{{ detalles_peoplesoft.name }}</h2>
+        <p class="numero-persona"><strong>ID Empleado:</strong> {{ detalles_peoplesoft.emplid }}</p>
+      </div>
     {% else %}
-        <p>No se encontraron datos para este usuario.</p>
+      <p>No se encontraron datos para este usuario.</p>
     {% endif %}
     <div class="row">
-
       {% block content_comparador %} {% endblock content_comparador %}
     </div>
   </div>
+  
 </div>
 
 {% endblock content %}

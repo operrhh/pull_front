@@ -23,6 +23,7 @@ urlpatterns = [
    path('proxy-departments/', views.proxy_to_departments, name='proxy-departments'),
    path('buscar_usuarios', views.buscar_usuarios, name="buscar_usuarios_mantenedor_works"),
    path('detalles/<str:base_datos>/<str:user_id>/', views.detalles_usuario, name='detalles_usuario'),
+   path('cargar_mas_usuarios/', views.cargar_mas_usuarios, name='cargar_mas_usuarios'),
 ]
 
 

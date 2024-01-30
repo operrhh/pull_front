@@ -10,7 +10,7 @@
   {% if usuarios %}
     <h2>Resultados de Búsqueda:</h2>
     <div class="table-responsive">
-      <table class="table">
+      <table class="table" id="tabla-resultados">
         <caption>Resultados de búsqueda</caption>
         <thead>
           <tr>
@@ -28,23 +28,44 @@
               <td>{{ usuario.department_name }}</td>
               <td>
                   {% if base_datos and usuario.personNumber %}
-                      <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-primary">Ver Detalle</a>
+                      <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-detalle">Ver Detalle</a>
                   {% else %}
                       <span>No disponible</span>
                   {% endif %}
               </td>
           </tr>
+
           {% empty %}
           <tr>
               <td colspan="4">No se encontraron resultados.</td>
           </tr>
           {% endfor %}
         </tbody>
+ 
       </table>
-    </div>
+      {% if has_more %}
+      <div class="text-center">
+        <button id="cargar-mas" data-next-url="{{ next_url }}">Cargar Más</button>
+
+        </div>
+    {% endif %}
+    </div>  
+
   {% else %}
     <p>No se encontraron resultados.</p>
   {% endif %}
 </div>
+
+{% block js %}
+<script type="text/javascript">
+  // Definir las variables nextUrl y nextOffset con los valores de Django
+  var nextUrl = "{{ next_url|default:'' }}";  // Utiliza el valor predeterminado si next_url no está definido
+  var nextOffset = "{{ offset|default:'' }}";  // Utiliza el valor predeterminado si offset no está definido
+  var baseDatos = "{{ base_datos }}";
+  console.log(baseDatos);
+</script>
+<script type="text/javascript" src="{% static 'js/more_results.js' %}"></script>
+
+{% endblock js %}
 
 {% endblock grilla_usuarios %}

@@ -7,7 +7,7 @@ class WorkerServicePeopleSoft:
         self.url = f"{API_BASE_URL}/worker/peoplesoft/"
         self.global_service = GlobalService(request)
 
-    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None):
+    def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None, offset=None):
         params = {}
         if firstName:
             params['firstName'] = firstName
@@ -20,11 +20,14 @@ class WorkerServicePeopleSoft:
 
         response = self.global_service.generate_request(self.url, params=params)
         usuarios = []
+        next_url = None
         if response and 'results' in response:
             for user in response['results']:
                 usuario = self._procesar_usuario_peoplesoft(user)
                 usuarios.append(usuario)
-        return usuarios
+            next_url = response.get('next', None)
+            has_more = bool(next_url)
+            return usuarios, has_more, next_url
 
 
     def get_worker(self, personNumber):
@@ -113,3 +116,18 @@ class WorkerServicePeopleSoft:
             'telefono': user.get('home_phone', ''),
             'department_name': user.get('deptname', '')
         }
+    
+    def get_worker_next_ps(self, url):
+        try:
+            response = self.global_service.generate_request(url)
+            print("respuesta_next", response)
+
+            if response and 'results' in response:
+                # Procesa la respuesta como sea necesario
+                return response
+            else:
+                print("No se encontraron 'results' en la respuesta")
+                return None
+        except Exception as e:
+            print(f"Error al realizar la solicitud a la API: {e}")
+            return None
