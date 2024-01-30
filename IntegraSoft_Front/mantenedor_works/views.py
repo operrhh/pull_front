@@ -36,6 +36,78 @@ def get_worker_service(base_datos, request):
         raise ValueError("Base de datos no soportada")
     
 
+# @token_auth
+# def buscar_usuarios(request):
+#     firstName = ""
+#     lastName = ""  
+#     personNumber = ""  
+#     departamentoId = ""
+#     base_datos = ""  
+#     user = request.session.get('user', {})
+#     error_message = None  
+#     resultados = []  # Lista para almacenar los resultados
+#     has_more = False
+#     next_url = None
+
+#     # Obtén el offset de la URL para HCM
+#     offset = request.GET.get('offset', None)
+
+#     if request.method == 'POST':
+#         firstName = request.POST.get('firstName', '')
+#         lastName = request.POST.get('lastName', '')
+#         personNumber = request.POST.get('personNumber', '')
+#         departamentoId = request.POST.get('departamento', '')
+#         base_datos = request.POST.get('base_datos', '')
+
+#         if not base_datos:
+#             error_message = 'Debe seleccionar una base de datos.'
+#         elif not (firstName or lastName or personNumber or departamentoId):
+#             error_message = 'Debe llenar al menos un campo para la búsqueda.'
+#         else:
+#             try:
+#                 worker_service = get_worker_service(base_datos, request)
+#                 if base_datos == 'HCM':
+#                     resultados_hcm = worker_service.buscar_usuarios_por_nombre(
+#                         firstName=firstName,
+#                         lastName=lastName,
+#                         personNumber=personNumber,
+#                         department=departamentoId,
+#                         offset=offset  # Usa el offset de la URL
+#                     )
+#                     # Extraemos la información de paginación si está presente
+#                     if resultados_hcm and isinstance(resultados_hcm[-1], dict) and 'has_more' in resultados_hcm[-1]:
+#                         has_more = resultados_hcm[-1]['has_more']
+#                         next_url = resultados_hcm[-1]['next_url']
+#                         resultados_hcm = resultados_hcm[:-1]  # Removemos el elemento de paginación
+#                     resultados = resultados_hcm
+
+#                 elif base_datos == 'PeopleSoft':
+#                     resultados, has_more, next_url = worker_service.buscar_usuarios_por_nombre(
+#                         firstName=firstName,
+#                         lastName=lastName,
+#                         personNumber=personNumber,
+#                         department=departamentoId
+#                     )
+#                 print("siguiente_url",next_url)
+#             except ValueError as e:
+#                 logger.error(f"Error al buscar usuarios: {e}")
+#                 error_message = "Ocurrió un error al buscar usuarios."
+
+#     return render(request, 'mantenedor_works/buscar_usuarios.html', {
+#         'path': request.path,
+#         'usuarios': resultados,
+#         'firstName': firstName,
+#         'lastName': lastName,
+#         'personNumber': personNumber,
+#         'departamentoId': departamentoId,
+#         'base_datos': base_datos,
+#         'api_base_url': settings.API_BASE_URL,
+#         'user': user,
+#         'error_message': error_message,
+#         'has_more': has_more,
+#         'next_url': next_url
+#     })
+
 @token_auth
 def buscar_usuarios(request):
     firstName = ""
@@ -82,13 +154,18 @@ def buscar_usuarios(request):
                     resultados = resultados_hcm
 
                 elif base_datos == 'PeopleSoft':
-                    resultados, has_more, next_url = worker_service.buscar_usuarios_por_nombre(
+                    response = worker_service.buscar_usuarios_por_nombre(
                         firstName=firstName,
                         lastName=lastName,
                         personNumber=personNumber,
                         department=departamentoId
                     )
-                print("siguiente_url",next_url)
+                    if response:
+                        resultados, has_more, next_url = response
+                    else:
+                        resultados, has_more, next_url = ([], False, None)  # Valores predeterminados en caso de None
+                print("siguiente_url", next_url)
+
             except ValueError as e:
                 logger.error(f"Error al buscar usuarios: {e}")
                 error_message = "Ocurrió un error al buscar usuarios."
@@ -107,7 +184,6 @@ def buscar_usuarios(request):
         'has_more': has_more,
         'next_url': next_url
     })
-
 
 # views.py
 @token_auth
