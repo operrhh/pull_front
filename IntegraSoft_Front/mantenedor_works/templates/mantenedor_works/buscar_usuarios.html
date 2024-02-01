@@ -2,70 +2,75 @@
 {% load static %}
 
 {% block grilla_usuarios %}
-{% block css %} <link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">{% endblock css %} 
-<body>  
-  {% if registros_pagina %}
-  <h2>Resultados de Búsqueda:</h2>
-  <div class="table-responsive">
-    <table class="table">
-      <caption>Resultados de búsqueda en {{ formulario_data.base_datos }}</caption>
-      <thead>
-        <tr>
-          <th>Person Number</th>
-          <th>Nombre</th>
-          <th>Apellidos</th>
-          <th>Puesto</th>
-          <th>Estado</th>
-          <th>Ver Detalle</th>
-     
-        </tr>
-      </thead>
-      <tbody>
-        {% for resultado in registros_pagina %}
-        <tr>
-          <td>{{ resultado.PersonNumber }}</td>
-          <td>{{ resultado.names.0.FirstName }}</td>
-          <td>{{ resultado.names.0.LastName }}</td>
-          <td>{{ resultado.workRelationships.0.assignments.0.AssignmentName }}</td>
-          <td>
-            {% for r in resultados_con_discrepancias %}
-                {% if r.PersonNumber == resultado.PersonNumber %}
-                    {% if r.discrepancias == 0 %}
-                        <i class="bi bi-check2-circle"></i>
-                    {% else %}
-                      <span class="discrepancy">Diferencias({{ r.discrepancias }})</span>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </td>
-          <td>
-            {% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
-            {% block script_regreso %} <script src="{% static 'js/regreso.js'%}"></script>{% endblock script_regreso %} 
-            <a id="detalle" href="{% url 'detalles_usuario_mantenedor_works' base_datos=formulario_data.base_datos user_id=resultado.PersonNumber %}" class="btn btn-primary">Ver Detalle</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div class="pagination">
-      <span class="step-links">
-          {% if registros_pagina.has_previous %}
-              <a href="?page=1{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&laquo;&laquo;</a>
-              <a href="?page={{ registros_pagina.previous_page_number }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">anterior</a>
-          {% endif %}
-        
-          <span class="current-page">{{ registros_pagina.number }}</span>
-        
-          {% if registros_pagina.has_next %}
-              <a href="?page={{ registros_pagina.next_page_number }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">siguiente</a>
-              <a href="?page={{ registros_pagina.paginator.num_pages }}{% if formulario_data.PersonNumber %}&PersonNumber={{ formulario_data.PersonNumber }}{% endif %}{% if formulario_data.nombre %}&nombre={{ formulario_data.nombre }}{% endif %}{% if formulario_data.apellidos %}&apellidos={{ formulario_data.apellidos }}{% endif %}{% if formulario_data.ciudad %}&ciudad={{ formulario_data.ciudad }}{% endif %}{% if formulario_data.base_datos %}&base_datos={{ formulario_data.base_datos }}{% endif %}">&raquo;&raquo;</a>
-          {% endif %}
-      </span>
+{% block css %} 
+<link rel="stylesheet" type="text/css" href="{% static 'css/botones.css' %}">
+{% endblock css %}
+
+<div class="container">
+  {% if usuarios %}
+    <h2>Resultados de Búsqueda:</h2>
+    <div class="table-responsive">
+      <table class="table" id="tabla-resultados">
+        <caption>Resultados de búsqueda</caption>
+        <thead>
+          <tr>
+            <th>Número de Persona</th>
+            <th>Nombre Completo</th>
+            <th>Departamento</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usuario in usuarios %}
+          <tr>
+              <td>{{ usuario.personNumber }}</td>
+              <td>{{ usuario.nombre_completo }}</td>
+              <td>{{ usuario.department_name }}</td>
+              <td>
+                  {% if base_datos and usuario.personNumber %}
+                      <a href="{% url 'workers:detalles_usuario' base_datos=base_datos user_id=usuario.personNumber %}" class="btn btn-detalle">Ver Detalle</a>
+                  {% else %}
+                      <span>No disponible</span>
+                  {% endif %}
+              </td>
+          </tr>
+
+          {% empty %}
+          <tr>
+              <td colspan="4">No se encontraron resultados.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+ 
+      </table>
+      {% if has_more %}
+      <div class="text-center">
+        <button id="cargar-mas" data-next-url="{{ next_url }}">Cargar Más</button>
+
+        </div>
+    {% endif %}
+    </div>  
+    <div id="loading-spinner" style="display: none;" class="text-center">
+      <div class="spinner-border" role="status">
+          <span class="sr-only">Cargando...</span>
+      </div>
   </div>
   
-  </div>
-{% else %}
-  <p>No se encontraron resultados.</p>
-{% endif %}
+  {% else %}
+    <p>No se encontraron resultados.</p>
+  {% endif %}
+</div>
+
+{% block js %}
+<script type="text/javascript">
+  // Definir las variables nextUrl y nextOffset con los valores de Django
+  var nextUrl = "{{ next_url|default:'' }}";  // Utiliza el valor predeterminado si next_url no está definido
+  var nextOffset = "{{ offset|default:'' }}";  // Utiliza el valor predeterminado si offset no está definido
+  var baseDatos = "{{ base_datos }}";
+  console.log(baseDatos);
+</script>
+<script type="text/javascript" src="{% static 'js/more_results.js' %}"></script>
+
+{% endblock js %}
 
 {% endblock grilla_usuarios %}

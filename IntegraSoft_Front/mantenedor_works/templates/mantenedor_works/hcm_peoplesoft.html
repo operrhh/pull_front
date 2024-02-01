@@ -1,63 +1,211 @@
 {% extends 'mantenedor_works/detalles_usuario.html' %}
 {% load static %}
 
-{% block error %}
-    
-      {% if numero_discrepancias > 0 %}
-      <div class="alert alert-danger">
-          Se detectaron {{ numero_discrepancias }} diferencia(s) entre los datos de HCM y PeopleSoft.
-      </div>
-      {% endif %}
+{% block content_comparador %}
+<div class="card">
+    <h2 class="card-header">Comparación de Datos de Usuario</h2>
+    <div class="card-body">
 
-{% endblock error %}
-
-
-
-
-{% block hcm_block %}
-<div class="hcm">
-    <h3>Datos de HCM</h3>
-    {% if usuarios_hcm %}
-      <div class="mt-4">
-          <p>
-              <strong>Empleador:</strong> 
-              <span {% if usuarios_peoplesoft and usuarios_hcm.0.workRelationships.0.LegalEmployerName != usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName %} class="data-error"{% endif %}>
-                  {{ usuarios_hcm.0.workRelationships.0.LegalEmployerName }}
-              </span>
-          </p>
-          <p>
-              <strong>Unidad de negocio:</strong>
-              <span {% if usuarios_peoplesoft and usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName != usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName %}class="data-error"{% endif %}>
-                  {{ usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName }}
-              </span>
-          </p>
-      </div>
-    {% else %}
-      <p>No se encontraron datos en HCM para este usuario.</p>
+        {% if mensaje_hcm %}
+        <div class="alert alert-warning">{{ mensaje_hcm }}</div>
     {% endif %}
-</div>
-{% endblock hcm_block %}
+    {% if mensaje_peoplesoft %}
+        <div class="alert alert-warning">{{ mensaje_peoplesoft }}</div>
+    {% endif %}  
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th class="{% if base_datos == 'HCM' %}text-success{% endif %}">HCM</th>
+                <th class="{% if base_datos == 'PeopleSoft' %}text-success{% endif %}">PeopleSoft</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Ejemplo para el ID del Empleado -->
+            <tr>
+                <th>ID Empleado:</th>
+                <td class="{% if diferencias.person_number %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.person_number }}{% endif %}
+                </td>
+                <td class="{% if diferencias.person_number %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.emplid }}{% endif %}
+                </td>
+            </tr>
 
-{% block peoplesoft_block %}
-<div class="peoplesoft">
-    <h3>Datos de PeopleSoft</h3>
-    {% if usuarios_peoplesoft %}
-      <div class="mt-4">
-          <p>
-              <strong>Empleador:</strong> 
-              <span {% if usuarios_hcm and usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName != usuarios_hcm.0.workRelationships.0.LegalEmployerName %}class="data-error"{% endif %}>
-                  {{ usuarios_peoplesoft.0.workRelationships.0.LegalEmployerName }}
-              </span>
-          </p>
-          <p>
-              <strong>Unidad de negocio:</strong>
-              <span {% if usuarios_hcm and usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName != usuarios_hcm.0.workRelationships.0.assignments.0.BusinessUnitName %}class="data-error"{% endif %}>
-                  {{ usuarios_peoplesoft.0.workRelationships.0.assignments.0.BusinessUnitName }}
-              </span>
-          </p>
-      </div>
-    {% else %}
-      <p>No se encontraron datos en PeopleSoft para este usuario.</p>
-    {% endif %}
+            <tr>
+                <th>Fecha de nacimiento:</th>
+                <td class="{% if diferencias.date_of_birth %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.date_of_birth }}{% endif %}
+                </td>
+                <td class="{% if diferencias.date_of_birth %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.birthdate }}{% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Nombre completo:</th>
+                <td class="{% if diferencias.complete_name %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.complete_name }}{% endif %}
+                </td>
+                <td class="{% if diferencias.complete_name %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.name }}{% endif %}
+                </td>
+            </tr>
+
+            <tr>
+                <th>País:</th>
+                <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.country }}{% endif %}
+                </td>
+                <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.country }}{% endif %}
+                </td>
+            </tr>
+
+
+            <tr>             
+                <th>Direccion 1:</th>
+                <td class="{% if diferencias.addressLine1 %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.addressLine1 }}{% endif %}
+                </td>
+                <td class="{% if diferencias.addressLine1 %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.address1 }}{% endif %}
+                   </td>
+            </tr>
+
+            <tr>
+            <th>Direccion 2:</th>
+            <td class="{% if diferencias.addressLine2 %}table-danger{% endif %}">
+                {% if detalles_hcm %}{{ detalles_hcm.addressLine2 }}{% endif %}
+            </td>
+            <td class="{% if diferencias.addressLine2 %}table-danger{% endif %}">
+                {% if detalles_peoplesoft %}{{ detalles_peoplesoft.address2 }}{% endif %}
+               </td>
+            </tr>
+
+
+            <tr>
+                <th>Ciudad:</th>
+                <td class="{% if diferencias.town_or_city %}table-danger{% endif %}">
+                    {% if detalles_hcm %}{{ detalles_hcm.town_or_city }}{% endif %}
+                </td>
+                <td class="{% if diferencias.town_or_city %}table-danger{% endif %}">
+                    {% if detalles_peoplesoft %}{{ detalles_peoplesoft.city }}{% endif %}
+                   </td>
+                </tr>
+
+            <tr>
+                    <th>Tipo de persona en el sistema:</th>
+                    <td class="{% if diferencias.system_person_type %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.system_person_type }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.system_person_type %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.per_org }}{% endif %}
+                       </td>
+                </tr>  
+                
+            
+            <tr>
+                    <th>Fecha de inicio efectiva:</th>
+                    <td class="{% if diferencias.effective_start_date %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.effective_start_date }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.effective_start_date %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.hire_dt }}{% endif %}
+                       </td>
+                </tr>
+
+            
+                <tr>
+                    <th>Código centro de costo:</th>
+                    <td class="{% if diferencias.ccu_codigo_centro_costo %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.ccu_codigo_centro_costo }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.ccu_codigo_centro_costo %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.deptid }}{% endif %}
+                       </td>
+                </tr>
+
+                <tr>
+                    <th>Código de puesto:</th>
+                    <td class="{% if diferencias.job_code %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.job_code }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.job_code %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.jobcode }}{% endif %}
+                       </td>
+                </tr>
+
+                <tr>
+                    <th>Horas de trabajo estándar:</th>
+                    <td class="{% if diferencias.standard_working_hours %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.standard_working_hours }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.standard_working_hours %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.std_hours }}{% endif %}
+                       </td>
+                </tr>
+
+                <tr>
+                    <th>Código de ubicación:</th>
+                    <td class="{% if diferencias.locationCode %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.locationCode }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.locationCode %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.location }}{% endif %}
+                       </td>
+                </tr>
+
+                <tr>
+                    <th>ID del supervisor:</th>
+                    <td class="{% if diferencias.managerAssignmentNumber %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.managerAssignmentNumber }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.managerAssignmentNumber %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.supervisor_id }}{% endif %}
+                       </td>
+                </tr>
+
+                <tr>
+                    <th>Email:</th>
+                    <td class="{% if diferencias.email_address %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.email_address }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.email_address %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.email }}{% endif %}
+                       </td>
+                </tr>
+                <tr>
+                    <th>Nombre de entidad legal:</th>
+                    <td class="{% if diferencias.legal_employer_code %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.legal_employer_code }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.legal_employer_code %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.company }}{% endif %}
+                       </td>
+                </tr>
+                <tr>
+                    <th>Salario:</th>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.salary_amount }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.monthly_rt }}{% endif %}
+                       </td>
+                </tr>
+                <tr>
+                    <th>Nombre de departamento:</th>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.department_name }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.dept_descr }}{% endif %}
+                       </td>
+                </tr>
+            <!-- Repetir estructura para los demás campos -->
+            
+        </tbody>
+    </table>
 </div>
-{% endblock peoplesoft_block %}
+</div>
+{% endblock content_comparador %}

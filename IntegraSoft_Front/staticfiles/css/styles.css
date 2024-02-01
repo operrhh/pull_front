@@ -1,3 +1,4 @@
+
 .feature-card {
     max-width: 300px;
     margin: 0 auto; /* Centrar horizontalmente */
@@ -58,31 +59,57 @@
 /* Navbar */
 .navbar {
     background-color: #4CAF50;
+    background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 75%, transparent);
+    background-size: 40px 40px;
     border-radius: 0px;
-    padding: 0.5px ;
+    padding: 0px ;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
     font-weight: bold;
     color: white;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
 }
 
+.navbar-brand::before {
+    content: '';
+    position: absolute; /* Posiciona la imagen de forma absoluta para moverla más a la izquierda */
+    left: 0; /* Empieza desde el extremo izquierdo del navbar-brand */
+    top: 50%; /* Centra la imagen verticalmente */
+    transform: translateY(-50%); /* Ajusta esto para centrar exactamente la imagen si es necesario */
+    margin-left: -50px; /* Ajusta según la cantidad de espacio que desees a la izquierda de la imagen */
+    height: 40px; /* Ajusta la altura deseada para la imagen */
+    width: 40px; /* Ajusta el ancho deseado para la imagen */
+    background-image: url('../images/logoin.png'); /* Ruta a tu imagen */
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 .navbar-toggler-icon {
     background-color: white;
 }
 
 .navbar-nav .nav-link {
     color: white;
-    padding: 10px 20px;
+    padding: 6px 20px;
     transition: background-color 0.3s, color 0.3s;
     border-radius: 20px;
+    position: relative;
+    padding-left: 30px;
 }
 
 .navbar-nav .nav-link.active {
     background-color: rgba(255, 255, 255, 0.3);
     color: #4CAF50;
 }
+
+
+
+
 
 /* Dropdown */
 .dropdown-menu {
@@ -91,6 +118,10 @@
     border-radius: 10px;
 }
 
+.navbar .dropdown-menu {
+    margin-top: 0;
+   
+}
 .dropdown-item {
     color: white;
     transition: background-color 0.3s, color 0.3s;
@@ -113,3 +144,57 @@ h1 {
     color: #333;
 }
 
+/*Estilos para el login abajo */
+
+
+
+/* Estilos para la imagen y el formulario */
+.container-fluid {
+    background-color: #2E8B57; /* Cambia el código de color según el tono de verde que prefieras */
+    padding: 20px;
+}
+.login-card-container {
+    background-color: #FFFFFF;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 960px;
+}
+
+/* Estilos para la imagen */
+.login-image-side {
+    flex-grow: 1; /* Permite que crezca para ocupar más espacio */
+    flex-shrink: 1; /* Permite que se encoja si es necesario */
+    flex-basis: 60%; /* Comienza ocupando el 60% del espacio disponible */
+    background: url('../images/login.jpg.png') no-repeat center center;
+    background-size: cover;
+}
+
+/* Estilos para el formulario */
+.form-side {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 40%; /* Comienza ocupando el 40% del espacio disponible */
+    padding: 2rem;
+}
+
+@media (min-width: 992px) {
+    .login-card-container {
+        max-width: 80%;
+    }
+}
+
+/*Saludo*/
+.saludo h2 {
+    overflow: hidden; /* Esconde el contenido que excede el ancho del elemento */
+    white-space: nowrap; /* Asegúrate de que el texto esté en una sola línea */
+    width: 0;
+    animation: aparecer 5s forwards; /* Define la animación */
+}
+
+@keyframes aparecer {
+    from { width: 0; }
+    to { width: 100%; }
+}

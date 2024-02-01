@@ -1,254 +1,237 @@
-from django.shortcuts import render, redirect
-from modelos.models.persona import Persona
-from django.views import View
-from django.core.paginator import Paginator
-import json
-from pathlib import Path
+import logging
+import requests 
 from django.http import JsonResponse
-# -*- coding: utf-8 -*-
-BASE_DIR = Path(__file__).resolve().parent.parent
+from django.shortcuts import render, get_object_or_404
+from mantenedor_works.services.hcm.worker_service_hcm import WorkerServiceHcm
+from mantenedor_works.services.peoplesoft.worker_service_peoplesoft import WorkerServicePeopleSoft
+from mantenedor_works.services.department.department import DepartmentService
+from Decorators.auth_decorator import token_auth
+from urllib.parse import unquote
+from django.urls import reverse
+from IntegraSoft_Front import settings
+from django.http import JsonResponse
+from urllib.parse import unquote
 
+logger = logging.getLogger(__name__)
+@token_auth
 def index(request):
+    user = request.session['user']
+    return render(request, 'mantenedor_works/index_usuarios.html',{'user': user, 'api_base_url': settings.API_BASE_URL})
+
+@token_auth
+def proxy_to_departments(request):
+    base_datos = request.GET.get('base_datos', 'hcm')
+    search = request.GET.get('name', '')  # Cambiado a 'name' para coincidir con el parámetro de la API
+
+    service = DepartmentService(request)
+    response = service.get_departments(base_datos, search_query=search)
+    return JsonResponse(response)
+
+def get_worker_service(base_datos, request):
+    if base_datos == 'HCM':
+        return WorkerServiceHcm(request)
+    elif base_datos == 'PeopleSoft':
+        return WorkerServicePeopleSoft(request)
+    else:
+        raise ValueError("Base de datos no soportada")
     
-    return render(request, 'mantenedor_works/index_usuarios.html', {})
-       
-def cargar_datos_desde_json(archivo):
-    with open(BASE_DIR / 'mantenedor_works' / 'datos_prueba' / archivo, 'r', encoding='utf-8') as file:
-        return json.load(file)
 
 
-    
-def obtener_opciones_por_base(request):
-    base_datos = request.GET.get('base_datos')
-    
-    if base_datos not in ['PeopleSoft', 'HCM']:
-        return JsonResponse({'error': 'Base de datos no válida'}, status=400)
-    
-    archivo = f'datos_prueba_{base_datos.lower()}.json'
-    opciones_unidad_negocio = obtener_valores_unicos_desde_json([archivo], 'workRelationships', 'BusinessUnitName', 'assignments')
-    opciones_departamento = obtener_valores_unicos_desde_json([archivo], 'workRelationships', 'DepartmentName', 'assignments')
-    
-    return JsonResponse({
-        'opciones_unidad_negocio': opciones_unidad_negocio,
-        'opciones_departamento': opciones_departamento,
-    })
-def obtener_valores_unicos_desde_json(archivos, campo_anidado_1, campo, campo_anidado_2=None):
-    valores = set()
-    
-    for archivo in archivos:
-        datos = cargar_datos_desde_json(archivo)
-        
-        # Asegurarse de que los datos son una lista
-        if isinstance(datos, dict):
-            datos = [datos]
-        
-        for dato in datos:
-            for subdato in dato.get(campo_anidado_1, []):
-                if campo_anidado_2:
-                    for item in subdato.get(campo_anidado_2, []):
-                        if campo in item:
-                            valores.add(item[campo])
-                else:
-                    if campo in subdato:
-                        valores.add(subdato[campo])
-    return list(valores)
-
-
+@token_auth
 def buscar_usuarios(request):
-    pagina_actual = request.GET.get('page')
+    firstName = ""
+    lastName = ""  
+    personNumber = ""  
+    departamentoId = ""
+    base_datos = ""  
+    user = request.session.get('user', {})
+    error_message = None  
+    resultados = []  # Lista para almacenar los resultados
+    has_more = False
+    next_url = None
 
-    archivos = ['datos_prueba_hcm.json', 'datos_prueba_peoplesoft.json']  # Asume que tienes un archivo llamado 'datos_prueba_peoplesoft.json' para PeopleSoft
-    opciones_unidad_negocio = obtener_valores_unicos_desde_json(archivos, 'workRelationships', 'BusinessUnitName', 'assignments')
-    opciones_departamento = obtener_valores_unicos_desde_json(archivos, 'workRelationships', 'DepartmentName', 'assignments')
+    # Obtén el offset de la URL para HCM
+    offset = request.GET.get('offset', None)
 
-    if not pagina_actual:
-        person_number = request.GET.get('Person_Number')
-        nombre = request.GET.get('nombre')
-        business_unit_name = request.GET.get('BusinessUnitName')
-        department_name = request.GET.get('DepartmentName')
-        base_datos = request.GET.get('base_datos')
-        
-        
-        request.session['Person_Number'] = person_number
-        request.session['nombre'] = nombre
-        request.session['BusinessUnitName'] = business_unit_name
-        request.session['DepartmentName'] = department_name
-        request.session['base_datos'] = base_datos
-        
-    else:
-        person_number = request.session.get('Person_Number')
-        nombre = request.session.get('nombre')
-        business_unit_name = request.session.get('BusinessUnitName')
-        department_name = request.session.get('DepartmentName')
-        base_datos = request.session.get('base_datos')
-        
+    if request.method == 'POST':
+        firstName = request.POST.get('firstName', '')
+        lastName = request.POST.get('lastName', '')
+        personNumber = request.POST.get('personNumber', '')
+        departamentoId = request.POST.get('departamento', '')
+        base_datos = request.POST.get('base_datos', '')
 
-    campos_vacios = []
-    if not person_number:
-        campos_vacios.append('Person_Number')
-    if not nombre:
-        campos_vacios.append('nombre')
-    if not business_unit_name:
-        campos_vacios.append('BusinessUnitName')
-  
-    if not department_name:
-        campos_vacios.append('DepartmentName')
+        if not base_datos:
+            error_message = 'Debe seleccionar una base de datos.'
+        elif not (firstName or lastName or personNumber or departamentoId):
+            error_message = 'Debe llenar al menos un campo para la búsqueda.'
+        else:
+            try:
+                worker_service = get_worker_service(base_datos, request)
+                if base_datos == 'HCM':
+                    resultados_hcm = worker_service.buscar_usuarios_por_nombre(
+                        firstName=firstName,
+                        lastName=lastName,
+                        personNumber=personNumber,
+                        department=departamentoId,
+                        offset=offset  # Usa el offset de la URL
+                    )
+                    # Extraemos la información de paginación si está presente
+                    if resultados_hcm and isinstance(resultados_hcm[-1], dict) and 'has_more' in resultados_hcm[-1]:
+                        has_more = resultados_hcm[-1]['has_more']
+                        next_url = resultados_hcm[-1]['next_url']
+                        resultados_hcm = resultados_hcm[:-1]  # Removemos el elemento de paginación
+                    resultados = resultados_hcm
 
-    if not any([person_number, nombre, business_unit_name, department_name]):
-        contexto = {
-            'error_message': 'Por favor, ingrese al menos un criterio de búsqueda.',
-            'formulario_data': request.GET,
-            'campos_vacios': campos_vacios
-        }
-        return render(request, 'mantenedor_works/buscar_usuarios.html', contexto)
+                elif base_datos == 'PeopleSoft':
+                    response = worker_service.buscar_usuarios_por_nombre(
+                        firstName=firstName,
+                        lastName=lastName,
+                        personNumber=personNumber,
+                        department=departamentoId
+                    )
+                    if response:
+                        resultados, has_more, next_url = response
+                    else:
+                        resultados, has_more, next_url = ([], False, None)  # Valores predeterminados en caso de None
+                print("siguiente_url", next_url)
+
+            except ValueError as e:
+                logger.error(f"Error al buscar usuarios: {e}")
+                error_message = "Ocurrió un error al buscar usuarios."
+
+    return render(request, 'mantenedor_works/buscar_usuarios.html', {
+        'path': request.path,
+        'usuarios': resultados,
+        'firstName': firstName,
+        'lastName': lastName,
+        'personNumber': personNumber,
+        'departamentoId': departamentoId,
+        'base_datos': base_datos,
+        'api_base_url': settings.API_BASE_URL,
+        'user': user,
+        'error_message': error_message,
+        'has_more': has_more,
+        'next_url': next_url
+    })
+
+# views.py
+@token_auth
+def detalles_usuario(request, base_datos, user_id):
+    user = request.session.get('user', {})
+    detalles_hcm = None
+    detalles_peoplesoft = None
+    diferencias = {}  # Asegúrate de inicializar la variable diferencias
+
+    service_hcm = WorkerServiceHcm(request)
+    service_peoplesoft = WorkerServicePeopleSoft(request)
+
+    if base_datos == 'HCM':
+        detalles_hcm = service_hcm.get_worker(user_id)
+        detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
+        
+    elif base_datos == 'PeopleSoft':
+        detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
+        detalles_hcm = service_hcm.get_worker(user_id)
+
+
+    if detalles_hcm or detalles_peoplesoft:
+        diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
+        detalles_hcm['complete_name'] = detalles_hcm.get('complete_name', '').title()
+        detalles_peoplesoft['name'] = detalles_peoplesoft.get('name', '').title()    
+       
+       
+
+    # Agrega un mensaje si no se encuentran detalles
+    mensaje_hcm = 'No se encontraron datos en HCM para este usuario.' if not detalles_hcm else ''
+    mensaje_peoplesoft = 'No se encontraron datos en PeopleSoft para este usuario.' if not detalles_peoplesoft else ''
+
+    context = {
+        'user': user,
+        'base_datos': base_datos,
+        'detalles_hcm': detalles_hcm,
+        'detalles_peoplesoft': detalles_peoplesoft,
+        'diferencias': diferencias,
+        'mensaje_hcm': mensaje_hcm,
+        'mensaje_peoplesoft': mensaje_peoplesoft
+    }
     
-    if base_datos == 'PeopleSoft':
-        resultados = cargar_resultados_peoplesoft()
-    elif base_datos == 'HCM':
-        resultados = cargar_resultados_hcm()
-    else:
-        resultados = []
+   
+    return render(request, 'mantenedor_works/hcm_peoplesoft.html', context)
 
-    res = []
-    for dato in resultados:
-        first_name = dato['names'][0]['FirstName'].lower()
-        last_name = dato['names'][0]['LastName'].lower()
-        full_name = f"{first_name} {last_name}"
-        business_unit = dato['workRelationships'][0]['assignments'][0]['BusinessUnitName'].lower()    
-        department_from_data = dato['workRelationships'][0]['assignments'][0].get('DepartmentName', None)
-        
-        if (not person_number or dato['PersonNumber'] == person_number) and \
-                (not nombre or nombre.lower() in first_name or nombre.lower() in last_name or nombre.lower() in full_name) and \
-                (not business_unit_name or business_unit == business_unit_name.lower()) and \
-                (not department_name or department_from_data == department_name):
-
-                
-            res.append(dato)
-
-    registros_por_pagina = 7
-    paginator = Paginator(res, registros_por_pagina)
-    registros_pagina = paginator.get_page(pagina_actual)
-
-    resultados_hcm = cargar_resultados_hcm()
-    resultados_peoplesoft = cargar_resultados_peoplesoft()
-
-    resultados_con_discrepancias = []
-    for dato in resultados:
-        usuario_hcm = next((user for user in resultados_hcm if user['PersonNumber'] == dato['PersonNumber']), None)
-        usuario_peoplesoft = next((user for user in resultados_peoplesoft if user['PersonNumber'] == dato['PersonNumber']), None)
-
-        discrepancias = contar_discrepancias([usuario_hcm] if usuario_hcm else [], [usuario_peoplesoft] if usuario_peoplesoft else [])
-        resultados_con_discrepancias.append({
-            'PersonNumber': dato['PersonNumber'],
-            'discrepancias': discrepancias
-        })
-
-
-
-    contexto = {
-        'resultados': res,
-        'registros_pagina': registros_pagina,
-        'formulario_data': request.GET,
-        'opciones_unidad_negocio': opciones_unidad_negocio,
-        'opciones_departamento': opciones_departamento,
-        'resultados_con_discrepancias': resultados_con_discrepancias,
-        
+def comparar_datos(detalles_hcm, detalles_peoplesoft):
+    diferencias = {}
+    mapeo_campos = {
+        'complete_name':'name',
+        'person_number': 'emplid',
+        'date_of_birth': 'birthdate',
+        'last_name': 'last_name',
+        'first_name': 'first_name',
+        'middle_names': 'middle_name',
+        'legal_employer_code':'company',
+        'country': 'country',
+        'addressLine1': 'address1',
+        'addressLine2': 'address2',
+        'town_or_city': 'city',
+        'system_person_type': 'per_org',
+        'effective_start_date': 'hire_dt',
+        'business_unit_name': 'business_unit',
+        'business_unit_name': 'business_unit_descr',
+        'ccu_codigo_centro_costo': 'deptid',
+        'department_name': 'dept_descr',
+        'job_code': 'jobcode',
+        'standard_working_hours': 'std_hours',
+        'locationCode': 'location',
+        'managerAssignmentNumber': 'supervisor_id',
+        'email_address': 'email'
     }
 
-    return render(request, 'mantenedor_works/buscar_usuarios.html', contexto)
+    for campo_hcm, campo_ps in mapeo_campos.items():
+        valor_hcm = detalles_hcm.get(campo_hcm, None)
+        valor_ps = detalles_peoplesoft.get(campo_ps, None)
 
-# Datos de prueba para PeopleSoft
-def cargar_resultados_peoplesoft():
-    # Por el momento tenemos los archivos en datos_prueba_peoplesoft.json
-    return cargar_datos_desde_json('datos_prueba_peoplesoft.json')
+        # Si ambos valores son iguales (o ambos None), no hay diferencia
+        if valor_hcm == valor_ps:
+            diferencias[campo_hcm] = False
+        else:
+            # Hay una diferencia si alguno de los valores es None, o si son diferentes
+            diferencias[campo_hcm] = True
 
-
-# Datos de prueba para HCM
-def cargar_resultados_hcm():
-    # Por el momento tenemos los archivos en datos_prueba_hcm.json
-    return cargar_datos_desde_json('datos_prueba_hcm.json')
-
-
-# Función para obtener un usuario por su ID
-def obtener_usuario(user_id):
-    datos_prueba_peoplesoft = cargar_resultados_peoplesoft()
-    datos_prueba_hcm = cargar_resultados_hcm()
-    user_id = str(user_id)
-    usuario = None
-
-    for dato in datos_prueba_peoplesoft:
-        if dato['PersonNumber'] == user_id:
-            usuario = dato
-            break
-
-    if not usuario:
-        for dato in datos_prueba_hcm:
-            if dato['PersonNumber'] == user_id:
-                usuario = dato
-                break
-
-    return usuario
-# Funcion para mostrar detalles de usuario en la grilla de detalles_usuario
-def contar_discrepancias(usuarios_hcm, usuarios_peoplesoft):
-    conteo = 0
-
-    if not (usuarios_hcm and usuarios_peoplesoft):
-        return conteo
-
-    if usuarios_hcm[0]['workRelationships'][0]['LegalEmployerName'] != usuarios_peoplesoft[0]['workRelationships'][0]['LegalEmployerName']:
-        conteo += 1
-
-    if usuarios_hcm[0]['workRelationships'][0]['assignments'][0]['BusinessUnitName'] != usuarios_peoplesoft[0]['workRelationships'][0]['assignments'][0]['BusinessUnitName']:
-        conteo += 1
-
-    # Aquí puedes agregar más condiciones y aumentar el conteo según sea necesario
-
-    return conteo
+    return diferencias
 
 
 
+@token_auth
+def cargar_mas_usuarios(request):
+    next_url = request.GET.get('next_url')
+    base_datos = request.GET.get('base_datos', 'HCM')  # O un valor por defecto
 
-def detalles_usuario(request, base_datos, user_id):
-    datos_prueba_peoplesoft = cargar_resultados_peoplesoft()
-    datos_prueba_hcm = cargar_resultados_hcm()
-    
-    # Convertir user_id en cadena para comparación
-    user_id = str(user_id)
-    usuario = obtener_usuario(user_id)
-    
-    usuario_peoplesoft = []
-    usuario_hcm = []
-    
+    # Impresiones para depuración
+    print("Base de datos seleccionada:", base_datos)
+    print("URL siguiente:", next_url)
 
-    
-    # Buscar al usuario en los datos de PeopleSoft
-    for dato in datos_prueba_peoplesoft:
-        if dato['PersonNumber'] == user_id:
-            usuario_peoplesoft.append(dato)
-            break  # Salir del bucle si el usuario se encuentra
+    if not next_url:
+        return JsonResponse({'error': 'URL de próxima página no proporcionada'}, status=400)
 
-    # Buscar al usuario en los datos de HCM
-    for dato in datos_prueba_hcm:
-        if dato['PersonNumber'] == user_id:
-            usuario_hcm.append(dato)
-            break  # Salir del bucle si el usuario se encuentra
+    next_url = unquote(next_url)
 
-    # Verificar si se encontró al usuario en PeopleSoft o HCM
-    if not usuario:
-        return render(request, 'mantenedor_works/error.html', {'error_message': 'Usuario no encontrado'})
+    try:
+        if base_datos == 'HCM':
+            service = WorkerServiceHcm(request)
+            response_data = service.get_worker_next(next_url)
+        elif base_datos == 'PeopleSoft':
+            service = WorkerServicePeopleSoft(request)
+            response_data = service.get_worker_next_ps(next_url)
+        else:
+            return JsonResponse({'error': 'Base de datos no válida'}, status=400)
 
-    numero_discrepancias = contar_discrepancias(usuario_hcm, usuario_peoplesoft)
+        # Imprimir la respuesta para depuración
+        print("Datos de respuesta:", response_data)
 
-    return render(
-        request,
-        'mantenedor_works/hcm_peoplesoft.html',
-        {
-            'usuarios_peoplesoft': usuario_peoplesoft,
-            'usuarios_hcm': usuario_hcm,
-            'usuario': usuario,
-            'numero_discrepancias': numero_discrepancias,  # Pasa el número de discrepancias a la plantilla
-            'formulario_data': {'base_datos': base_datos},
-        }
-    )
+        if response_data:
+            return JsonResponse(response_data)
+        else:
+            return JsonResponse({'error': 'Error al obtener más usuarios'}, status=500)
 
-
+    except Exception as e:
+        print(f"Error en cargar_mas_usuarios: {e}")
+        return JsonResponse({'error': str(e)}, status=500)

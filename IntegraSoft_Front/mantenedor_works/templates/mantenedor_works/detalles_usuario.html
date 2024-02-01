@@ -1,6 +1,7 @@
 {% extends 'templates_generales/template_main.html' %}
 {% load static %}
 
+
 {% block content %}
 
 <div class="container">
@@ -13,40 +14,29 @@
   {% block script_cargar %} <script src="{% static 'js/listener.js' %}"></script>{% endblock script_cargar %}
   {% block script_regreso %} <script src="{% static 'js/regreso.js'%}"></script>{% endblock script_regreso %}
   <div class="align-right">
-    <!-- Botón para regresar a la página de búsqueda -->
-    <a id="regresar_formulario" href="{% url 'buscar_usuarios_mantenedor_works' %}" class="btn btn-primary">Regresar a la búsqueda</a>
+    <a id="regresar_formulario" href="{% url 'workers:buscar_usuarios_mantenedor_works' %}" class="btn btn-primary">Regresar a la búsqueda</a>
   </div>
 
   <h1 class="text-center mt-4">Detalles del Usuario</h1>
   <div class="mt-4">
-      {% if usuario %}
-    <h2>{{ usuario.names.0.FirstName }} {{ usuario.names.0.LastName }}</h2>
-    <p><strong>Número de Persona:</strong> {{ usuario.PersonNumber }}</p>
-    <p><strong>Ciudad:</strong> {{ usuario.addresses.0.TownOrCity }}</p>
+    {% if base_datos == 'HCM' and detalles_hcm %}
+      <div class="nombre-completo-contenedor">
+        <h2 class="nombre-completo-panel"><strong>Usuario:</strong>{{ detalles_hcm.complete_name }}</h2>
+        <p class="numero-persona"><strong>Número de Persona:</strong> {{ detalles_hcm.person_number }}</p>
+      </div>
+    {% elif base_datos == 'PeopleSoft' and detalles_peoplesoft %}
+      <div class="nombre-completo-contenedor">
+        <h2 class="nombre-completo-panel"><strong> Usuario: </strong>{{ detalles_peoplesoft.name }}</h2>
+        <p class="numero-persona"><strong>ID Empleado:</strong> {{ detalles_peoplesoft.emplid }}</p>
+      </div>
     {% else %}
-    <p>No se encontraron datos para este usuario.</p>
-  {% endif %}
-
-    <!-- Aquí puedes agregar más lógica para detectar diferencias entre los sistemas -->
-  {%block error %}     
-
-  {% endblock error %}
-  
-
+      <p>No se encontraron datos para este usuario.</p>
+    {% endif %}
     <div class="row">
-      <!-- Sección para los datos de HCM -->
-      <div class="col-md-6 {% if formulario_data.base_datos == 'HCM' %}background-hcm{% endif %}">
-        {% block hcm_block %} {% endblock hcm_block %}
-      </div>
-
-      <!-- Sección para los datos de PeopleSoft -->
-      <div class="col-md-6 {% if formulario_data.base_datos == 'PeopleSoft' %}background-peoplesoft{% endif %}">
-        {% block peoplesoft_block %} {% endblock peoplesoft_block %}
-      </div>
+      {% block content_comparador %} {% endblock content_comparador %}
     </div>
   </div>
+  
 </div>
+
 {% endblock content %}
-
-
-
