@@ -25,6 +25,7 @@
 .btn-detalle {
   background-color: #32CD32; /* Color verde claro */
   border-color: #32CD32; /* Color verde claro */
+  color: white;
   transition: background-color 0.3s, border-color 0.3s; /* Para suavizar la transición */
 }
 

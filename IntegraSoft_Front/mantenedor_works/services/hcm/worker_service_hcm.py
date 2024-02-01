@@ -36,18 +36,12 @@ class WorkerServiceHcm:
         relaciones_laborales = worker_data.get('work_relationships', [])[0] if worker_data.get('work_relationships') else {}
         assignment = relaciones_laborales.get('assignment', {}) if relaciones_laborales else {}
         
-        first_name = nombres.get('first_name', '').strip()
-        last_name = nombres.get('last_name', '').strip()
-        middle_names = nombres.get('middle_names', '').strip()
-
-        nombre_completo = ' '.join(filter(None, [first_name, last_name, middle_names ]))
         # Construcción del diccionario con los datos extraídos
         datos_procesados = {
             'person_number': worker_data.get('person_number', ''),
-            'nombre': nombre_completo,
             'date_of_birth': worker_data.get('date_of_birth', ''),
             'legal_employer_code': relaciones_laborales.get('legal_employer_code', ''),
-            'complete_name': nombres.get('complete_name', ''),
+            'complete_name': nombres.get('complete_name', '').strip().upper(),
             'display_name': nombres.get('display_name', ''),
             'last_name': nombres.get('last_name', ''),
             'first_name': nombres.get('first_name', ''),
