@@ -8,7 +8,8 @@ function limpiarFormulario() {
 
   document.getElementById('base_datos').value = '';
 
-  document.getElementById('departamentoDropdown').value = '';
+  // Resetear Select2 departamentoDropdown
+  $('#departamentoDropdown').val(null).trigger('change');
 
   document.getElementById('grillaUsuarios').innerHTML = '';
 }
