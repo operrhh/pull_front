@@ -46,6 +46,8 @@ class WorkerServiceHcm:
             'person_number': worker_data.get('person_number', ''),
             'nombre': nombre_completo,
             'date_of_birth': worker_data.get('date_of_birth', ''),
+            'legal_employer_code': relaciones_laborales.get('legal_employer_code', ''),
+            'complete_name': nombres.get('complete_name', ''),
             'display_name': nombres.get('display_name', ''),
             'last_name': nombres.get('last_name', ''),
             'first_name': nombres.get('first_name', ''),
@@ -55,6 +57,7 @@ class WorkerServiceHcm:
             'addressLine2': direcciones.get('addressLine2', ''),
             'town_or_city': direcciones.get('town_or_city', ''),
             'system_person_type': assignment.get('system_person_type', ''),
+            'salary_amount': assignment.get('salary_amount', ''),
             'effective_start_date': assignment.get('effective_start_date', ''),
             'business_unit_name': assignment.get('business_unit_name', ''),
             'ccu_codigo_centro_costo': assignment.get('ccu_codigo_centro_costo', ''),
@@ -67,6 +70,7 @@ class WorkerServiceHcm:
             'telefono': telefonos.get('phone_number', '')
         }
         
+        print(datos_procesados)
         return datos_procesados
     
     def buscar_usuarios_por_nombre(self, firstName, lastName, personNumber=None, department=None, offset=None):

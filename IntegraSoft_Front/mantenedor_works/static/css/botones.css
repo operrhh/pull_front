@@ -90,6 +90,31 @@
   background-color: #45a049; /* Un tono ligeramente más oscuro de verde al pasar el ratón por encima */
 }
 
+/* botones.css */
+#cargar-mas {
+  background-color: #4CAF50; /* Color Verde */
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 20px; /* Añade espacio arriba del botón */
+  margin-bottom: 10px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#cargar-mas:hover {
+  background-color: #45a049; /* Color Verde Oscuro al pasar el cursor por encima */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+#cargar-mas:active {
+  background-color: #3e8e41; /* Color Verde más Oscuro al hacer clic */
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+
 /*Nuevas opciones department/*
 
 /* Ajustar el ancho del select2 */
@@ -133,3 +158,4 @@
 .card-body {
   padding: 16px; /* Espaciado interno del cuerpo de la card */
 }
+

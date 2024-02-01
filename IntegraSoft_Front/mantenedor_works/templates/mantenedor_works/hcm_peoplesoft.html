@@ -45,7 +45,7 @@
             <tr>
                 <th>Nombre completo:</th>
                 <td class="{% if diferencias.first_name %}table-danger{% endif %}">
-                    {% if detalles_hcm %}{{ detalles_hcm.first_name }}{% endif %}
+                    {% if detalles_hcm %}{{ detalles_hcm.complete_name }}{% endif %}
                 </td>
                 <td class="{% if diferencias.first_name %}table-danger{% endif %}">
                     {% if detalles_peoplesoft %}{{ detalles_peoplesoft.first_name }}{% endif %}
@@ -175,7 +175,24 @@
                         {% if detalles_peoplesoft %}{{ detalles_peoplesoft.email }}{% endif %}
                        </td>
                 </tr>
-
+                <tr>
+                    <th>Nombre de entidad legal:</th>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.legal_employer_code }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.dept_descr }}{% endif %}
+                       </td>
+                </tr>
+                <tr>
+                    <th>Salario:</th>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_hcm %}{{ detalles_hcm.salary_amount }}{% endif %}
+                    </td>
+                    <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
+                        {% if detalles_peoplesoft %}{{ detalles_peoplesoft.dept_descr }}{% endif %}
+                       </td>
+                </tr>
                 <tr>
                     <th>Nombre de departamento:</th>
                     <td class="{% if diferencias.dept_descr %}table-danger{% endif %}">
