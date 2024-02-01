@@ -14,11 +14,17 @@ function habilitarCampos() {
             mensaje.style.opacity = '0';
             setTimeout(() => {
                 mensaje.style.display = 'none';
-            }, 2000);  // Espera 2 segundos después de que la opacidad llegue a 0 para ocultar el mensaje
+            }, 2000);
         }, 5000);
     } else {
         mensaje.style.display = 'none';
-        cargarDepartamentos();
+
+        // Verifica si Select2 está inicializado antes de destruirlo
+        if ($('#departamentoDropdown').data('select2')) {
+            $('#departamentoDropdown').select2('destroy');
+        }
+        
+        inicializarSelectDepartamentos();
     }
 }
 
