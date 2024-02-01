@@ -119,14 +119,13 @@
 
 /* Ajustar el ancho del select2 */
 .select2-container {
-  width: 50% !important; /* Ajusta esto al ancho que prefieras */
-  margin-left: auto;
-
+  width: 100% !important;
 }
 
-/* Alinear el contenedor de select2 a la derecha */
-
-
+/* Asegúrate de que las opciones desplegables de select2 también sean anchas */
+.select2-dropdown {
+  width: 26% !important;
+}
 
 /* Para mantener la alineación del texto a la izquierda dentro del select */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -137,6 +136,7 @@
 .select2-selection__rendered {
   text-align: left !important;
 }
+
 
 /* Grilla */
 .card {
