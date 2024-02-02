@@ -81,6 +81,9 @@ TEMPLATES = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:30630']
+
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:30630',
 ]
