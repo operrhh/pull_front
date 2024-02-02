@@ -28,9 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-0r9bv5yqum2lpvl8bb24wlw_-2f0nma67(30df_r3w1^%r3z%a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.104','0.0.0.0','127.0.0.1','localhost:30630','web', '168.138.71.27', '129.151.110.152', '10.85.4.72:30630', '10.85.4.72', 'localhost']
+#ALLOWED_HOSTS = ['192.168.0.104','0.0.0.0','127.0.0.1','localhost:30630','web', '168.138.71.27', '129.151.110.152', '10.85.4.72:30630', '10.85.4.72', 'localhost']
+ALLOWED_HOSTS = ['192.168.0.104', '0.0.0.0', '127.0.0.1', 'localhost', 'web', '168.138.71.27', '129.151.110.152', '10.85.4.72']
 
 
 # Application definition
@@ -80,6 +81,9 @@ TEMPLATES = [
         },
     },
 ]
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:30630']
+
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:30630',
