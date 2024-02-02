@@ -115,12 +115,57 @@ def buscar_usuarios(request):
     })
 
 # views.py
+# @token_auth
+# def detalles_usuario(request, base_datos, user_id):
+#     user = request.session.get('user', {})
+#     detalles_hcm = None
+#     detalles_peoplesoft = None
+#     diferencias = {}  # Asegúrate de inicializar la variable diferencias
+
+#     service_hcm = WorkerServiceHcm(request)
+#     service_peoplesoft = WorkerServicePeopleSoft(request)
+
+#     if base_datos == 'HCM':
+#         detalles_hcm = service_hcm.get_worker(user_id)
+#         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
+        
+#     elif base_datos == 'PeopleSoft':
+#         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
+#         detalles_hcm = service_hcm.get_worker(user_id)
+
+
+#     if detalles_hcm or detalles_peoplesoft:
+#         diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
+#         detalles_hcm['complete_name'] = detalles_hcm.get('complete_name', '').title()
+#         detalles_peoplesoft['name'] = detalles_peoplesoft.get('name', '').title()    
+       
+       
+
+#     # Agrega un mensaje si no se encuentran detalles
+#     mensaje_hcm = 'No se encontraron datos en HCM para este usuario.' if not detalles_hcm else ''
+#     mensaje_peoplesoft = 'No se encontraron datos en PeopleSoft para este usuario.' if not detalles_peoplesoft else ''
+
+#     context = {
+#         'user': user,
+#         'base_datos': base_datos,
+#         'detalles_hcm': detalles_hcm,
+#         'detalles_peoplesoft': detalles_peoplesoft,
+#         'diferencias': diferencias,
+#         'mensaje_hcm': mensaje_hcm,
+#         'mensaje_peoplesoft': mensaje_peoplesoft
+#     }
+    
+   
+#     return render(request, 'mantenedor_works/hcm_peoplesoft.html', context)
+
 @token_auth
 def detalles_usuario(request, base_datos, user_id):
     user = request.session.get('user', {})
     detalles_hcm = None
     detalles_peoplesoft = None
-    diferencias = {}  # Asegúrate de inicializar la variable diferencias
+    diferencias = {}
+    mensaje_hcm = ''
+    mensaje_peoplesoft = ''
 
     service_hcm = WorkerServiceHcm(request)
     service_peoplesoft = WorkerServicePeopleSoft(request)
@@ -128,22 +173,17 @@ def detalles_usuario(request, base_datos, user_id):
     if base_datos == 'HCM':
         detalles_hcm = service_hcm.get_worker(user_id)
         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
-        
+        mensaje_peoplesoft = 'No se encontraron datos en PeopleSoft para este usuario.' if not detalles_peoplesoft else ''
     elif base_datos == 'PeopleSoft':
         detalles_peoplesoft = service_peoplesoft.get_detalle_usuario_peoplesoft(user_id)
         detalles_hcm = service_hcm.get_worker(user_id)
+        mensaje_hcm = 'No se encontraron datos en HCM para este usuario.' if not detalles_hcm else ''
 
 
-    if detalles_hcm or detalles_peoplesoft:
+    if detalles_hcm and detalles_peoplesoft:
         diferencias = comparar_datos(detalles_hcm, detalles_peoplesoft)
-        detalles_hcm['complete_name'] = detalles_hcm.get('complete_name', '').title()
-        detalles_peoplesoft['name'] = detalles_peoplesoft.get('name', '').title()    
-       
-       
-
-    # Agrega un mensaje si no se encuentran detalles
-    mensaje_hcm = 'No se encontraron datos en HCM para este usuario.' if not detalles_hcm else ''
-    mensaje_peoplesoft = 'No se encontraron datos en PeopleSoft para este usuario.' if not detalles_peoplesoft else ''
+        detalles_hcm['complete_name'] = detalles_hcm.get('complete_name', '').title() if detalles_hcm else 'No disponible'
+        detalles_peoplesoft['name'] = detalles_peoplesoft.get('name', '').title() if detalles_peoplesoft else 'No disponible'
 
     context = {
         'user': user,
@@ -155,7 +195,6 @@ def detalles_usuario(request, base_datos, user_id):
         'mensaje_peoplesoft': mensaje_peoplesoft
     }
     
-   
     return render(request, 'mantenedor_works/hcm_peoplesoft.html', context)
 
 def comparar_datos(detalles_hcm, detalles_peoplesoft):
@@ -186,15 +225,16 @@ def comparar_datos(detalles_hcm, detalles_peoplesoft):
     }
 
     for campo_hcm, campo_ps in mapeo_campos.items():
-        valor_hcm = detalles_hcm.get(campo_hcm, None)
-        valor_ps = detalles_peoplesoft.get(campo_ps, None)
+            # Comprobación de None antes de intentar llamar a .get()
+            valor_hcm = detalles_hcm.get(campo_hcm, None) if detalles_hcm else None
+            valor_ps = detalles_peoplesoft.get(campo_ps, None) if detalles_peoplesoft else None
 
-        # Si ambos valores son iguales (o ambos None), no hay diferencia
-        if valor_hcm == valor_ps:
-            diferencias[campo_hcm] = False
-        else:
-            # Hay una diferencia si alguno de los valores es None, o si son diferentes
-            diferencias[campo_hcm] = True
+            # Si ambos valores son iguales (o ambos None), no hay diferencia
+            if valor_hcm == valor_ps:
+                diferencias[campo_hcm] = False
+            else:
+                # Hay una diferencia si alguno de los valores es None, o si son diferentes
+                diferencias[campo_hcm] = True
 
     return diferencias
 
